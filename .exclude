@@ -1,0 +1,6 @@
+.exclude
+*.nc
+public/models
+public/tmp
+.git*
+.history

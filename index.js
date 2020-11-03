@@ -11,9 +11,9 @@ var _ = require("underscore")
 var glob = require("glob")
 var fs = require("fs");
 var PNG = require("pngjs").PNG;
-var sleep = require('sleep');
+// var sleep = require('sleep');
 // const { csvParse } = require("d3");
-var zip = require("express-zip");
+// var zip = require("express-zip");
 
 
 // --- To allow large arrays being passed
@@ -26,9 +26,25 @@ http.listen(2020, '0.0.0.0', function () {
   console.log("Server is running on port 2020");
 });
 
+var pass = "";
 app.get("/", function (req, res) {
-  res.sendFile(__dirname + "/public/index.html");
+  pass = "";
+  res.sendFile(__dirname + "/public/login.html");
 });
+
+
+app.post("/setPassword", function (req, res) {
+  pass = "letIn";
+  res.send();
+});
+
+app.get("/map", function (req, res) {
+  console.log(pass)
+  if (pass == "letIn") {
+    res.sendFile(__dirname + "/public/main.html");
+  }
+});
+
 
 
 app.post("/prepareImage", function (req, res) {
@@ -62,9 +78,10 @@ app.post("/prepareImage", function (req, res) {
             var i = (this.width * y + x) << 2;
             var u = (this.data[i] / 255) * (uvMax - uvMin) + uvMin,
               v = (this.data[i + 1] / 255) * (uvMax - uvMin) + uvMin;
+            // console.log(this.data[i], u, v, Math.sqrt(u ** 2 + v ** 2))
             speed.push(Math.sqrt(u ** 2 + v ** 2));
             tmpDir = Math.atan2(v, u) * 180 / Math.PI;
-            tmpDir = tmpDir>=0 ? tmpDir : tmpDir + 360;
+            tmpDir = tmpDir >= 0 ? tmpDir : tmpDir + 360;
             direction.push(tmpDir);
           }
         }

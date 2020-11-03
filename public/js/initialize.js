@@ -35,12 +35,12 @@ $(".tabButtons").on("click", (e) => {
 })
 
 $('.ui .accordion')
-  .accordion({
-    selector: {
-      trigger: '.title .icon'
-    }
-  })
-;
+    .accordion({
+        selector: {
+            trigger: '.title .icon'
+        }
+    })
+    ;
 
 
 function getAvailTimes(model, field) {
@@ -164,6 +164,10 @@ function init_ddDepth() {
 
 init_ddField();
 
+
+setInterval(() => {
+    $("#dateTime").html(moment().utc().format("MMM D, HH:mm") + " UTC");
+}, 1000);
 
 //----------------------------------------- DROPDOWNS CHANGE -----------------------------------------\\
 // $('#ddField').dropdown('setting', 'onChange', (i, selectedField) => {

@@ -225,14 +225,18 @@
     `;
 
     var defaultRampColors = {
-        0.0: '#3288bd',
+        0.0: "#3288bd",
+        0.0055459354: "#3288bd",
+        0.0055459355: 'rgba(0,0,0,0)',
+        0.0055459356: 'rgba(0,0,0,0)',
+        0.0055459357: "#3288bd",
         0.1: '#66c2a5',
         0.2: '#abdda4',
         0.3: '#e6f598',
         0.4: '#fee08b',
         0.5: '#fdae61',
         0.6: '#f46d43',
-        1.0: '#d53e4f'
+        0.7: '#d53e4f'
     };
 
     var WindGL = function WindGL(gl) {
@@ -413,7 +417,6 @@
 
         ctx.fillStyle = gradient;
         ctx.fillRect(0, 0, 256, 1);
-
         return new Uint8Array(ctx.getImageData(0, 0, 256, 1).data);
     }
 

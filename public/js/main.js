@@ -1,5 +1,3 @@
-//////////////////////////////////--------\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
-// ------------------------------- MAPBOX --------------------------------\\
 mapboxgl.accessToken = "pk.eyJ1IjoidGFpbWF6IiwiYSI6ImNrNTlzd2h2dTA3NXgza3J6aHh2cHJlbDkifQ.iY8Kc535hXfTZ4VksOUBWg";
 
 var map = new mapboxgl.Map({
@@ -22,6 +20,11 @@ map.scrollZoom.setWheelZoomRate(1);
 
 
 map.on("load", () => {
+    $('.mapboxgl-ctrl-logo').remove();
+    $(".mapboxgl-ctrl-bottom-left").prepend(
+        `<div id="txtDepth" data-placeholder="Click anywhere for depth" style="width: 100%;color: azure;text-align-last: center;font-size: large;padding-bottom: 10px;"></div>`
+    )
+
     // using var to work around a WebKit bug
     var canvas = document.getElementById('cnvModel');
 
@@ -67,17 +70,18 @@ map.on("load", () => {
         $("#latTracker").html(num2latlon(e.lngLat.lat, 'lat'));
         $("#lonTracker").html(num2latlon(e.lngLat.lng, 'lon'));
 
-        if (Math.abs(direction[i]) === 135.0 || Math.abs(direction[i]) === 45.0) {
-            $("#speedTracker").html("-");
-            // $("#directionTracker").html("-");
-        } else {
-            $("#speedTracker").html(speed[i].toFixed(3) + " <sup>m</sup>&frasl;<sub>s</sub>");
-            // $("#directionTracker").html(direction[i].toFixed(1) + " &deg;");
-            hand1.showValue(360 - direction[i], 100, am4core.ease.cubicOut); // --- Gause works clockwise
-        }
+        // if (Math.abs(direction[i]) === 135.0 || Math.abs(direction[i]) === 45.0) {
+        // if (Math.abs(speed[i] - 0.016637806616154) < 0.000001) {
+        // $("#speedTracker").html("-");
+        // $("#directionTracker").html("-");
+        // } else {
+        $("#speedTracker").html(speed[i].toFixed(3) + " <sup>m</sup>&frasl;<sub>s</sub>");
+        // $("#speedTracker").html(speed[i]);
+        // $("#directionTracker").html(direction[i].toFixed(1) + " &deg;");
+        hand1.showValue(360 - direction[i], 100, am4core.ease.cubicOut); // --- Gause works clockwise
+        // }
     });
 });
-
 
 
 function getJSON(url, callback) {
