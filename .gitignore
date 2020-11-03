@@ -1,0 +1,5 @@
+*.nc
+*.jpg
+node_modules/
+public/tmp/
+.history

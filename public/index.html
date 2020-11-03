@@ -1,0 +1,536 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-163436758-1"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag() { dataLayer.push(arguments); }
+        gtag('js', new Date());
+
+        gtag('config', 'UA-163436758-1');
+    </script>
+
+
+    <title>MUNgliders</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <meta http-equiv="Content-type" content="text/html;charset=UTF-8">
+    <?xml version="1.0" encoding="UTF-8"?>
+
+
+    <!-- Mapbox -->
+    <script src='https://api.mapbox.com/mapbox.js/v3.2.1/mapbox.js'></script>
+    <script src="https://api.mapbox.com/mapbox-gl-js/v1.7.0/mapbox-gl.js"></script>
+    <link href="https://api.mapbox.com/mapbox-gl-js/v1.7.0/mapbox-gl.css" rel="stylesheet" />
+
+    <!-- jQuery CDN -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
+    <!-- Moment -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.18.1/moment.min.js"></script>
+
+    <!-- D3 -->
+    <script src="https://d3js.org/d3.v5.min.js"></script>
+
+    <!-- Font Awesome Icons -->
+    <script src="https://kit.fontawesome.com/99048cd5b7.js"></script>
+
+    <!-- Bootstrap -->
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.bundle.min.js"
+        type="text/javascript"></script>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+        integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous" />
+
+    <!-- Bootstrap Toggle -->
+    <script src="https://gitcdn.github.io/bootstrap-toggle/2.2.2/js/bootstrap-toggle.min.js"></script>
+    <link href="https://gitcdn.github.io/bootstrap-toggle/2.2.2/css/bootstrap-toggle.min.css" rel="stylesheet">
+
+    <!-- Bootstrap Slider -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-slider/10.6.2/bootstrap-slider.min.js"></script>
+    <link rel="stylesheet" type="text/css"
+        href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-slider/10.6.2/css/bootstrap-slider.min.css" />
+
+    <!-- Semantic UI -->
+    <link rel="stylesheet" type="text/css"
+        href="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.4.1/semantic.min.css" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.4.1/semantic.min.js"></script>
+
+    <!-- Turf -->
+    <script src="https://npmcdn.com/@turf/turf@5.1.6/turf.min.js"></script>
+
+    <!-- Underscore -->
+    <script src="https://cdn.jsdelivr.net/npm/underscore@1.11.0/underscore-min.js"></script>
+
+    <!-- Amcharts -->
+    <script src="https://cdn.amcharts.com/lib/4/core.js"></script>
+    <script src="https://cdn.amcharts.com/lib/4/charts.js"></script>
+    <script src="https://cdn.amcharts.com/lib/4/themes/dataviz.js"></script>
+    <script src="https://cdn.amcharts.com/lib/4/themes/animated.js"></script>
+
+    <!-- Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Ubuntu:wght@700&display=swap" rel="stylesheet">
+
+
+    <!-- Styles -->
+    <link rel="stylesheet" type="text/css" href="styles.css" />
+</head>
+
+
+
+<body>
+    <div class="ui sidebar inverted vertical menu" style="width: 22.5%;">
+        <div class="ui segment inverted p-0">
+            <div class="ui grid inverted m-0">
+
+                <!-- TAB HEADERS -->
+                <div class="one wide column" style="padding:0; margin: 0; height: 90vh;">
+                    <button name="tabModels" class="ui inverted icon button tabButtons active"
+                        data-content="Overlay Model Fields" style="height: 30vh;">
+                        <i class="fas fa-globe-americas"></i>
+                    </button>
+                    <button name="tabPathPlanning" class="ui inverted icon button tabButtons"
+                        data-content="Path Planning" style="height: 30vh;">
+                        <i class="fas fa-route"></i>
+                    </button>
+                    <button name="tabMissionsArchieve" class="ui inverted icon button tabButtons"
+                        data-content="Missions Archieve" style="height: 30vh;">
+                        <i class="fas fa-archive"></i>
+                    </button>
+                </div>
+
+                <!-- TAB CONTENTS -->
+                <div class="fifteen wide column p-0">
+                    <div class="p-3" style="height: 90vh;">
+                        <!-- MODELS TAB -->
+                        <div id="tabModels" class="ui segment inverted tabContent" style="display: block;">
+                            <div class="ui grid inverted">
+                                <!-- <h2 class="ui header inverted" style="width: 100%;">Selected Model</h2> -->
+
+                                <!-- FIELD -->
+                                <div class="eight wide column">Field:</div>
+                                <div class="eight wide column px-0">
+                                    <div id="ddField" class="ui selection dropdown"
+                                        style="min-width:-webkit-fill-available;">
+                                        <input type="hidden">
+                                        <i class="dropdown icon"></i>
+                                        <div class="default text">Field</div>
+                                    </div>
+                                </div>
+
+                                <!-- MODEL -->
+                                <div class="eight wide column">Model:</div>
+                                <div class="eight wide column px-0">
+                                    <div id="ddModel" class="ui selection dropdown"
+                                        style="min-width:-webkit-fill-available;">
+                                        <input type="hidden">
+                                        <i class="dropdown icon"></i>
+                                        <div class="default text"></div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="ui divider"></div>
+                            <div class="ui grid">
+                                <!-- <h2 class="ui header" style="width: 100%;">Data Info</h2> -->
+
+                                <!-- LATEST RUN -->
+                                <!-- <div class="eight wide column">Last Run:</div>
+                            <div class="eight wide column px-0">6 Oct, 2020 - 18:30</div> -->
+
+                                <!-- TIME -->
+                                <div class="eight wide column">Forecast:</div>
+                                <div class="eight wide column px-0">
+                                    <div id="ddTime" class="ui selection dropdown"
+                                        style="min-width:-webkit-fill-available;">
+                                        <input type="hidden">
+                                        <i class="dropdown icon"></i>
+                                        <div class="default text">Forecast</div>
+                                    </div>
+                                </div>
+
+                                <!-- DEPTH -->
+                                <div class="eight wide column">Depth:</div>
+                                <div class="eight wide column px-0">
+                                    <div id="ddDepth" class="ui selection dropdown"
+                                        style="min-width:-webkit-fill-available;">
+                                        <input type="hidden">
+                                        <i class="dropdown icon"></i>
+                                        <div class="default text">Depth (m)</div>
+                                    </div>
+                                </div>
+                                <!-- <div class="one wide inverted column">m</div> -->
+                            </div>
+                            <div class="ui divider"></div>
+                            <div class="ui grid">
+                                <!-- <h2 class="ui header" style="width: 100%;">Pointer info</h2> -->
+
+                            </div>
+                        </div>
+
+                        <!-- PATH PLANNING TAB -->
+                        <div id="tabPathPlanning" class="ui segment inverted tabContent" style="display: none;">
+                            <section id="PPcontainer" class="ui mini form p-2">
+                                <div class="two fields" style="font-family: Verdana, Geneva, Tahoma, sans-serif;">
+                                    <div class="field">
+                                        <label style="text-align: center; color:lightgreen;">From</label>
+                                        <!-- <input id="inputFromLat" class="ui input disabled" onchange="moveMarkerFrom()"
+                                        placeholder="latitude" type="text" style="margin: 1%" /> -->
+                                        <div id="PPfromLat" style="text-align:center">-</div>
+                                        <!-- <input id="inputFromLon" class="ui input disabled" onchange="moveMarkerFrom()"
+                                        placeholder="longitude" type="text" style="margin: 1%" /> -->
+                                        <div id="PPfromLon" style="text-align:center">-</div>
+                                    </div>
+                                    <div class="field">
+                                        <label style="text-align: center; color: rosybrown;">To</label>
+                                        <!-- <input id="inputToLat" class="ui input disabled" onchange="moveMarkerTo()"
+                                        placeholder="latitude" type="text" style="margin: 1%" /> -->
+                                        <div id="PPtoLat" style="text-align:center">-</div>
+                                        <!-- <input id="inputToLon" class="ui input disabled" onchange="moveMarkerTo()"
+                                        placeholder="longitude" type="text" style="margin: 1%" /> -->
+                                        <div id="PPtoLon" style="text-align:center">-</div>
+                                    </div>
+                                </div>
+                                <div id="divDistance" style="margin: 5px; text-align: center; color: green;">-</div>
+
+                                <!-- SELECT MODEL -->
+                                <label style="margin:2px; text-align: center; color: silver;">Select model:</label>
+                                <div align="center" style="margin: 5px;">
+                                    <div id="pathFinderSelectModel" class="ui tiny buttons">
+                                        <button id="btnHYCOM" class="ui inverted button" onclick="selectModel('hycom')"
+                                            style="width: 75px;">HYCOM</button>
+                                        <div class="or"></div>
+                                        <button id="btnRIOPS" class="ui inverted button" onclick="selectModel('riops')"
+                                            style="width: 75px;">RIOPS</button>
+                                    </div>
+                                </div>
+
+                                <!-- Forecast/Hindcast Weight -->
+                                <label class="mt-4" style="color: silver; width: 100%;">Forecast/Hindcast
+                                    Weight:</label>
+                                <label class="mt-1" style="color: silver; float: left">Hindcast</label>
+                                <label class="mt-1" style="color: silver; float: right">Forecast</label>
+                                <input id="inputWeight" type="text" data-slider-min="0" data-slider-max="1"
+                                    data-slider-step=".02" data-slider-value=".8" style="width: 100%;" />
+                                <label id="weightValue" class="mt-0"
+                                    style="text-align: center; color: silver;">0.8</label>
+
+                                <!-- Bathymetry Switch -->
+                                <label class="checkbox-inline ml-4" style="width: 100%; color: silver;">
+                                    <input id="chkbxPPbathymetry" type="checkbox" data-toggle="toggle"
+                                        data-onstyle="success" data-offstyle="danger" data-size="small">
+                                    Bathymetry
+                                </label>
+
+                                <!-- Time Stepping Switch -->
+                                <label class="checkbox-inline ml-4" style="width: 100%; color: silver;">
+                                    <input id="chkbxPPtimeStepping" type="checkbox" data-toggle="toggle"
+                                        data-onstyle="success" data-offstyle="danger" data-size="small">
+                                    Time Stepping
+                                </label>
+
+                                <div class="ui divider"></div>
+
+                                <!-- SUBMIT / CANCEL BUTTONS -->
+                                <div align="center" style="margin-top: 15px;">
+                                    <div id='btnSubmit' class="ui tiny green submit button disabled"
+                                        onclick="submitGetLatLon()">Submit</div>
+                                    <div id='btnDownload' class="ui tiny icon button disabled"
+                                        onclick="downloadGetLatLon()">
+                                        <i class="icon download"></i>
+                                    </div>
+                                </div>
+                            </section>
+                        </div>
+
+                        <!-- MISSONS ARCHIEVE -->
+                        <div id="tabMissionsArchieve" class="ui segment inverted tabContent" style="display: none;">
+                            <div class="ui inverted fluid accordion">
+
+                                <h4 style="color:gold">2020</h4>
+                                <!-- 2020 Sailbuoy Wave -->
+                                <div class="title">
+                                    <i class="dropdown icon"></i>
+                                    <span onclick="addMission('SBwave2020')">Sailbuoy Wave</span>
+                                </div>
+                                <div class="content">
+                                    <table class="ui inverted table">
+                                        <tbody>
+                                            <tr>
+                                                <td>Deployed</td>
+                                                <td>4 Mar 2020<br>(47.71 °N, 52.97 °W)</td>
+                                            </tr>
+                                            <tr>
+                                                <td>Recovered</td>
+                                                <td>10 Apr 2020<br>(52.941 °N, 43.54 °W)</td>
+                                            </tr>
+                                            <tr>
+                                                <td>No. of Days</td>
+                                                <td>38</td>
+                                            </tr>
+                                            <tr>
+                                                <td>Distance Traveled</td>
+                                                <td>2225 km</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+
+                                <div class="ui divider"></div>
+
+                                <h4 style="color:gold">2019</h4>
+                                <!-- 2019 Pearldiver Labrador -->
+                                <div class="title">
+                                    <i class="dropdown icon"></i>
+                                    <span onclick="addMission('PDlab2019')">Pearldiver Labrador</span>
+                                </div>
+                                <div class="content">
+                                    <table class="ui inverted table">
+                                        <tbody>
+                                            <tr>
+                                                <td>Deployed</td>
+                                                <td>4 Dec 2019, 21:23:25 UTC<br>(50.430 °N, 47.936 °W)</td>
+                                            </tr>
+                                            <tr>
+                                                <td>Recovered</td>
+                                                <td>27 Jun 2020, 10:23:59 UTC<br>(47.941 °N, 53.449 °W)</td>
+                                            </tr>
+                                            <tr>
+                                                <td>No. of Days</td>
+                                                <td>207</td>
+                                            </tr>
+                                            <tr>
+                                                <td>Distance Traveled</td>
+                                                <td>4527 km</td>
+                                            </tr>
+                                            <tr>
+                                                <td>No. of Surfacings</td>
+                                                <td>663</td>
+                                            </tr>
+                                            <tr>
+                                                <td>Battery Level</td>
+                                                <td>27.35 %</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+
+                                <div class="ui divider"></div>
+
+                                <!-- 2019 Sailbuoy Beluga -->
+                                <div class="title">
+                                    <i class="dropdown icon"></i>
+                                    <span onclick="addMission('SBbeluga2019')">Sailbuoy Beluga</span>
+                                </div>
+                                <div class="content">
+                                    <table class="ui inverted table">
+                                        <tbody>
+                                            <tr>
+                                                <td>Deployed</td>
+                                                <td>4 Dec 2019<br>(20.18 °N, 48.47 °W)</td>
+                                            </tr>
+                                            <tr>
+                                                <td>Recovered</td>
+                                                <td>30 Dec 2019<br>(52.66 °N, 50.55 °W)</td>
+                                            </tr>
+                                            <tr>
+                                                <td>No. of Days</td>
+                                                <td>27</td>
+                                            </tr>
+                                            <tr>
+                                                <td>Distance Traveled</td>
+                                                <td>1185 km</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+
+                                <div class="ui divider"></div>
+
+                                <!-- 2019 Pearldiver GOSL -->
+                                <div class="title">
+                                    <i class="dropdown icon"></i>
+                                    <span onclick="addMission('PDgosl2019')">Pearldiver Gulf of St. Lawrence</span>
+                                </div>
+                                <div class="content">
+                                    <table class="ui inverted table">
+                                        <tbody>
+                                            <tr>
+                                                <td>Deployed</td>
+                                                <td>8 Aug 2019<br>(50.25 °N, 58.00 °W)</td>
+                                            </tr>
+                                            <tr>
+                                                <td>Recovered</td>
+                                                <td>15 Aug 2019<br>(49.56 °N, 57.94 °W)</td>
+                                            </tr>
+                                            <tr>
+                                                <td>No. of Days</td>
+                                                <td>8</td>
+                                            </tr>
+                                            <tr>
+                                                <td>Distance Traveled</td>
+                                                <td>153 km</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+
+                                <div class="ui divider"></div>
+
+                                <h4 style="color:gold">2016</h4>
+                                <!-- 2016 VITALS -->
+                                <div class="title">
+                                    <i class="dropdown icon"></i>
+                                    <span onclick="addMission('vitals2016')">VITALS</span>
+                                </div>
+                                <div class="content">
+                                    <table class="ui inverted table">
+                                        <tbody>
+                                            <tr>
+                                                <td>Deployed</td>
+                                                <td>10 Sep 2016<br>(53.99 °N, 56.48 °W)</td>
+                                            </tr>
+                                            <tr>
+                                                <td>Recovered</td>
+                                                <td>29 Dec 2016<br>(47.91 °N, 53.44 °W)</td>
+                                            </tr>
+                                            <tr>
+                                                <td>No. of Days</td>
+                                                <td>111</td>
+                                            </tr>
+                                            <tr>
+                                                <td>Distance Traveled</td>
+                                                <td>3030 km</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+
+                                <div class="ui divider"></div>
+
+                                <h4 style="color:gold">2014</h4>
+                                <!-- 2014 Unit_473 -->
+                                <div class="title">
+                                    <i class="dropdown icon"></i>
+                                    <span onclick="addMission('unit473_2014')">Unit_473</span>
+                                </div>
+                                <div class="content">
+                                    <table class="ui inverted table">
+                                        <tbody>
+                                            <tr>
+                                                <td>Deployed</td>
+                                                <td>5 Jul 2014<br>(50.25 °N, 50.14 °W)</td>
+                                            </tr>
+                                            <tr>
+                                                <td>Recovered</td>
+                                                <td>18 Aug 2014<br>(51.76 °N, 50.64 °W)</td>
+                                            </tr>
+                                            <tr>
+                                                <td>No. of Days</td>
+                                                <td>45</td>
+                                            </tr>
+                                            <tr>
+                                                <td>Distance Traveled</td>
+                                                <td>954 km</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+
+                                <div class="ui divider"></div>
+
+                                <!-- 2014 Pearldiver -->
+                                <div class="title">
+                                    <i class="dropdown icon"></i>
+                                    <span onclick="addMission('PD2014')">Pearldiver</span>
+                                </div>
+                                <div class="content">
+                                    <table class="ui inverted table">
+                                        <tbody>
+                                            <tr>
+                                                <td>Deployed</td>
+                                                <td>5 Jul 2014<br>(53.39 °N, 50.13 °W)</td>
+                                            </tr>
+                                            <tr>
+                                                <td>Recovered</td>
+                                                <td>16 Aug 2014<br>(51.86 °N, 50.47 °W)</td>
+                                            </tr>
+                                            <tr>
+                                                <td>No. of Days</td>
+                                                <td>43</td>
+                                            </tr>
+                                            <tr>
+                                                <td>Distance Traveled</td>
+                                                <td>1001 km</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+
+            <div class="p-0" style="height: 10vh;">
+                <div class="ui grid inverted m-0">
+                    <div id="activeModel" class="six wide column"
+                        style="text-align: center; font-size: large; font-family: 'Ubuntu', sans-serif;">
+                        RIOPS
+                    </div>
+
+                    <!-- Speed -->
+                    <div id="speedTracker" class="five wide column p-1" style="font-weight: bold; text-align: center;">
+                        <p class="m-0" style="text-align:center">2.735</p>
+                        <p class="m-0" style="text-align:center"><sup>m</sup>/<sub>s</sub></p>
+                    </div>
+
+                    <!-- Direction Gauge -->
+                    <div id="directionTracker" class="five wide column p-0" style="height: 7vh;">
+                    </div>
+
+                    <div id="latTracker" class="eight wide column p-0" style="text-align: center;">-</div>
+                    <div id="lonTracker" class="eight wide column p-0" style="text-align: center;">-</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="pusher" style="width: 80%;">
+        <canvas id="cnvModel"></canvas>
+        <canvas id="cnvPathPlanning"></canvas>
+        <div id="map" style="position: absolute; width: 100%; height: 100vh;"></div>
+
+        <div id="dimmer" class="ui segment m-0">
+            <div class="ui active dimmer"> </div>
+        </div>
+    </div>
+
+
+    <!-- ERROR MODAL -->
+    <div id="errorModal" class="ui basic modal"
+        style="width: fit-content; height: fit-content; margin: auto; font-size: x-large;">
+        <div class="ui icon header">
+            <i class="fas fa-exclamation-circle"></i>
+            Something's Wrong!
+        </div>
+        <div id="errorText" class="content" style="text-align: center;">
+        </div>
+    </div>
+
+
+
+    <!-- ########################################################### -->
+    <!-- SCRIPTS -->
+    <script src="./js/globals.js"></script>
+    <script src="./js/initialize.js"></script>
+    <script src="./js/wind-gl.js"></script>
+    <script src="./js/main.js"></script>
+    <script src="./js/gauge.js"></script>
+
+    <script src="./js/pathPlanning.js"></script>
+    <script src="./js/missions.js"></script>
+</body>
+
+</html>

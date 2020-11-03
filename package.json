@@ -1,0 +1,29 @@
+{
+  "name": "test2",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "dependencies": {
+    "cross-fetch": "^3.0.5",
+    "csv-parser": "^2.3.3",
+    "d3": "^5.16.0",
+    "d3-fetch": "^1.2.0",
+    "es6-promise": "^4.2.8",
+    "express": "^4.17.1",
+    "express-zip": "^3.0.0",
+    "glob": "^7.1.6",
+    "isomorphic-fetch": "^2.2.1",
+    "moment": "^2.27.0",
+    "node-fetch": "^2.6.0",
+    "nodemon": "^2.0.4",
+    "pngjs": "^5.0.0",
+    "sleep": "^6.3.0",
+    "underscore": "^1.10.2"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "start": "nodemon --ignore ./public/tmp/ index.js"
+  },
+  "author": "",
+  "license": "ISC"
+}

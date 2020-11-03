@@ -1,0 +1,21 @@
+##  Convert the time column in the csv file to YYYYmmDD_HHMMSS, consistent among all mission files
+
+import pandas as pd
+from datetime import datetime
+
+
+###############################
+
+missionFile = 'PDlab2019.csv'
+fmt = '%a %b %d %H:%M:%S %Y MT'
+
+###############################
+
+
+data = pd.read_csv(missionFile)
+dates = []
+for row in data.iterrows():
+    dates.append( datetime.strptime(row[1]['time'], fmt).strftime('%Y%m%d_%H%M%S') )
+
+data['time'] = pd.Series(dates)
+data.to_csv("new"+missionFile, index=False)
