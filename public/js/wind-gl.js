@@ -104,7 +104,8 @@
         // decode current particle position from the pixel's RGBA value\n
         v_particle_pos = vec2( color.r / 255.0 + color.b, color.g / 255.0 + color.a );\n\n
         
-        if (color.r/255.>.1) { gl_PointSize = 0.; } else { gl_PointSize = 1.0; }\n
+        // if (color.r/255.>.1) { gl_PointSize = 0.; } else { gl_PointSize = 1.0; }\n
+        // if (color.r>.200) { gl_PointSize = 0.; } else { gl_PointSize = 1.0; }\n
         // gl_PointSize = 1.0;\n
         gl_Position = vec4(2.0 * v_particle_pos.x - 1.0, 1.0 - 2.0 * v_particle_pos.y, 0, 1);\n
     }\n
@@ -122,7 +123,7 @@
     
     void main() {\n
         vec2 velocity = mix(u_wind_min, u_wind_max, texture2D(u_wind, v_particle_pos).rg);\n
-        float speed_t = length(velocity) / length(u_wind_max);\n\n
+        float speed_t = (length(velocity)-0.01663780661) / length(u_wind_max);\n\n
         
         // color ramp is encoded in a 16x16 texture\n
         vec2 ramp_pos = vec2( fract(16.0 * speed_t), floor(16.0 * speed_t) / 16.0 );\n\n
@@ -198,7 +199,7 @@
         vec2 pos = vec2( color.r / 255.0 + color.b, color.g / 255.0 + color.a ); // decode particle position from pixel RGBA\n\n
             
         vec2 velocity = mix(u_wind_min, u_wind_max, lookup_wind(pos));\n
-        float speed_t = length(velocity) / length(u_wind_max);\n\n
+        float speed_t = (length(velocity)-0.01663780661) / length(u_wind_max);\n\n
         
         // take EPSG:4236 distortion into account for calculating where the particle moved\n
         float distortion = 1.;\n
@@ -224,20 +225,47 @@
     }\n
     `;
 
+    // var defaultRampColors = {
+    //     // 0.0: "rgba(0,0,0,0)",
+    //     0.0: "#3288bd",
+    //     0.1: '#66c2a5',
+    //     0.2: '#abdda4',
+    //     0.3: '#e6f598',
+    //     0.4: '#fee08b',
+    //     0.5: '#fdae61',
+    //     0.6: '#f46d43',
+    //     0.7: '#d53e4f'
+    // };
+
     var defaultRampColors = {
-        0.0: "#3288bd",
-        0.0055459354: "#3288bd",
-        0.0055459355: 'rgba(0,0,0,0)',
-        0.0055459356: 'rgba(0,0,0,0)',
-        0.0055459357: "#3288bd",
-        0.1: '#66c2a5',
-        0.2: '#abdda4',
-        0.3: '#e6f598',
-        0.4: '#fee08b',
-        0.5: '#fdae61',
-        0.6: '#f46d43',
-        0.7: '#d53e4f'
+        0.0: "rgba(0,0,0,0)",
+        0.001:"#0099ff",
+        0.05:"#33cccc",
+        0.1:"#00ff99",
+        0.15:"#33cc33",
+        0.2:"#99ff33",
+        0.25:"#ffff00",
+        0.3:"#ff9933",
+        0.35:"#ff5050",
+        0.4:"#ff3399",
+        0.45:"#ff00ff",
+        0.5:"#9966ff",
+
+
     };
+
+    // var defaultRampColors = {
+    //     0.0: "rgba(0,0,0,0)",
+    //     0.01: "#3288bd",
+    //     0.01: '#66c2a5',
+    //     0.02: '#abdda4',
+    //     0.03: '#e6f598',
+    //     0.04: '#fee08b',
+    //     0.05: '#fdae61',
+    //     0.06: '#f46d43',
+    //     0.07: '#d53e4f'
+    // };
+
 
     var WindGL = function WindGL(gl) {
         this.gl = gl;
@@ -368,6 +396,8 @@
         gl.uniform1f(program.u_particles_res, this.particleStateResolution);
         gl.uniform2f(program.u_wind_min, this.windData.uMin, this.windData.vMin);
         gl.uniform2f(program.u_wind_max, this.windData.uMax, this.windData.vMax);
+        // gl.uniform2f(program.u_wind_min, -3,-3);
+        // gl.uniform2f(program.u_wind_max, 3,3);
 
         gl.drawArrays(gl.POINTS, 0, this._numParticles);
     };

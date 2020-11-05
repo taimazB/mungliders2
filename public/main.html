@@ -31,7 +31,9 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.18.1/moment.min.js"></script>
 
     <!-- D3 -->
-    <script src="https://d3js.org/d3.v5.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/6.2.0/d3.min.js"
+        integrity="sha512-C2RveGuPIWqkaLAluvoxyiaN1XYNe5ss11urhZWZYBUA9Ydgj+hfGKPcxCzTwut1/fmjEZR7Ac35f2aycT8Ogw=="
+        crossorigin="anonymous"></script>
 
     <!-- Font Awesome Icons -->
     <script src="https://kit.fontawesome.com/99048cd5b7.js"></script>
@@ -79,7 +81,8 @@
 
 
 <body>
-    <div class="ui sidebar inverted vertical menu" style="width: 22.5%;">
+    <!-- <div class="ui sidebar inverted vertical visible menu" style="width: 22.5%;"> -->
+    <div class="m-0 p-0 inverted" style="width: 22.5%; height: 100%; position:absolute; left: 0;">
         <div class="ui segment inverted p-0">
             <div class="ui grid inverted m-0">
 
@@ -498,7 +501,8 @@
         </div>
     </div>
 
-    <div class="pusher" style="width: 80%;">
+    <!-- <div class="pusher" style="width: 77.5%;"> -->
+    <div style="width: 77.5%; height: 100%;position: absolute; right: 0">
         <canvas id="cnvModel"></canvas>
         <canvas id="cnvPathPlanning"></canvas>
         <div id="map" style="position: absolute; width: 100%; height: 100vh;"></div>

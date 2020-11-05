@@ -76,9 +76,9 @@ app.post("/prepareImage", function (req, res) {
         for (var y = 0; y < this.height; y++) {
           for (var x = 0; x < this.width; x++) {
             var i = (this.width * y + x) << 2;
-            var u = (this.data[i] / 255) * (uvMax - uvMin) + uvMin,
-              v = (this.data[i + 1] / 255) * (uvMax - uvMin) + uvMin;
-            // console.log(this.data[i], u, v, Math.sqrt(u ** 2 + v ** 2))
+            var u = (this.data[i] / 255) * (uvMax - uvMin) + uvMin + 0.0117647058823529,
+              v = (this.data[i + 1] / 255) * (uvMax - uvMin) + uvMin - 0.0117647058823529;
+            // console.log(u, v, Math.sqrt(u ** 2 + v ** 2))
             speed.push(Math.sqrt(u ** 2 + v ** 2));
             tmpDir = Math.atan2(v, u) * 180 / Math.PI;
             tmpDir = tmpDir >= 0 ? tmpDir : tmpDir + 360;

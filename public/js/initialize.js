@@ -1,3 +1,5 @@
+///////////////////////////////////////////---------\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+//----------------------------------------- SLIDERS -----------------------------------------\\
 $("#inputWeight").slider({
     tooltip: 'always',
     tooltip_position: 'bottom'
@@ -65,7 +67,7 @@ function getAvailTimes(model, field) {
 $('.ui.sidebar')
     .sidebar('setting', 'dimPage', false)
     .sidebar('setting', 'closable', false)
-    .sidebar('toggle')
+    // .sidebar('toggle')
 
 
 ///////////////////////////////////////////-----------------\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
@@ -77,8 +79,8 @@ fields = [
         depths: [0, 1, 2, 3, 5, 6, 8, 9, 11, 13, 16, 19, 22, 26, 30, 35, 41, 47, 53, 61, 69, 77, 86, 97, 108, 120, 133, 147, 163, 180, 199, 221, 244, 271, 300, 333, 370, 411, 457, 508, 565, 628, 697, 773, 856, 947, 1045, 1151, 1265, 1387, 1516, 1652, 1795, 1945, 2101, 2262, 2429, 2600, 2776, 2955, 3138, 3324, 3513, 3704, 3897, 4093, 4289, 4488, 4687, 4888, 5089, 5291, 5494, 5698, 5902],
         depth: 0,
         latestRun: null,
-        times: getAvailTimes("RIOPS", "UV").map(d => moment(d, "YYYYMMDD_HH")),
-        time: getAvailTimes("RIOPS", "UV").map(d => moment(d, "YYYYMMDD_HH"))[0]
+        times: getAvailTimes("RIOPS", "UV").map(d => moment.utc(d, "YYYYMMDD_HH")),
+        time: null
     },
     {
         field: "UV",
@@ -86,8 +88,8 @@ fields = [
         depths: [0, 2, 4, 6, 8, 10, 12, 15, 20, 25, 30, 35, 40, 45, 50, 60, 70, 80, 90, 100, 125, 150, 200, 250, 300, 350, 400, 500, 600, 700, 800, 900, 1000, 1250, 1500, 2000, 2500, 3000, 4000, 5000],
         depth: 0,
         latestRun: null,
-        times: getAvailTimes("HYCOM", "UV").map(d => moment(d, "YYYYMMDD_HH")),
-        time: getAvailTimes("HYCOM", "UV").map(d => moment(d, "YYYYMMDD_HH"))[0]
+        times: getAvailTimes("HYCOM", "UV").map(d => moment.utc(d, "YYYYMMDD_HH")),
+        time: null
     },
     {
         field: "SST",
@@ -103,6 +105,20 @@ fields = [
 field = fields[0];
 
 
+///////////////////////////////////////////-------------\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+//----------------------------------------- DATE & TIME -----------------------------------------\\
+function findClosestDateTime(time, times) {
+    var index = d3.minIndex(times.map(d => Math.abs(d.diff(time, 'minutes'))));
+    return { index: index, time: times[index] };
+}
+
+lastModelDate = findClosestDateTime(moment().utc(), field.times).time;
+// field.time = lastModelDate;
+setInterval(() => {
+    $("#dateTime").html(moment().utc().format("MMM D, HH:mm") + " UTC");
+}, 1000);
+
+
 ///////////////////////////////////////////-----------\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
 //----------------------------------------- DROPDOWNS -----------------------------------------\\
 function init_ddField() {
@@ -114,23 +130,24 @@ function init_ddField() {
             resetField();
             field = fields.filter(d => d.field == selectedField)[0];
             init_ddModel();
-            draw();
+            // draw();
         })
 
     init_ddModel();
 }
 
 function init_ddModel() {
-    $('#ddModel').dropdown({
-        values: fields.filter(d => d.field == field.field).map((d, i) => { return { name: d.model, value: i } }),
-    })
+    $('#ddModel')
+        .dropdown({
+            values: fields.filter(d => d.field == field.field).map((d, i) => { return { name: d.model, value: i } }),
+        })
         .dropdown('set selected', '0')
         .dropdown('setting', 'onChange', (i, selectedModel) => {
             $("#activeModel").html(selectedModel);
             resetField();
             field = fields.filter(d => d.field == field.field && d.model == selectedModel)[0];
-            init_ddDepth();
             init_ddTime();
+            init_ddDepth();
             draw();
         })
 
@@ -139,15 +156,21 @@ function init_ddModel() {
 }
 
 function init_ddTime() {
-    $('#ddTime').dropdown({
-        values: fields.filter(d => { return d.field == field.field && d.model == field.model })[0].times.map((d, i) => { return { name: d.format("MMM D, HH:00"), value: i } }),
-    })
-        .dropdown('set selected', '0')
+    lastModelDate = field.times[findClosestDateTime(lastModelDate, field.times).index];
+    $('#ddTime')
+        .dropdown({
+            values: fields.filter(d => { return d.field == field.field && d.model == field.model })[0].times.map((d, i) => { return { name: d.format("MMM D, HH:00"), value: i } }),
+        })
+        .dropdown('set selected', findClosestDateTime(lastModelDate, field.times).index)
         .dropdown('setting', 'onChange', (i, selectedTime) => {
             resetField();
-            field.time = field.times[i];
+            lastModelDate = field.times[i];
+            field.time = lastModelDate;
             draw();
         })
+
+    field.time = lastModelDate;
+    // draw();
 }
 
 function init_ddDepth() {
@@ -160,14 +183,12 @@ function init_ddDepth() {
             field.depth = selectedDepth;
             draw();
         })
+
+    // draw();
 }
 
 init_ddField();
 
-
-setInterval(() => {
-    $("#dateTime").html(moment().utc().format("MMM D, HH:mm") + " UTC");
-}, 1000);
 
 //----------------------------------------- DROPDOWNS CHANGE -----------------------------------------\\
 // $('#ddField').dropdown('setting', 'onChange', (i, selectedField) => {

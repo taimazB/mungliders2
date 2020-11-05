@@ -35,7 +35,7 @@ map.on("load", () => {
     const gl = canvas.getContext('webgl', { antialiasing: false });
 
     wind = window.wind = new WindGL(gl);
-    wind.numParticles = 40000;
+    wind.numParticles = 20000;
 
     function frame() {
         if (wind.windData) {
