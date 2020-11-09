@@ -26,7 +26,7 @@ map.on("load", () => {
     )
 
     // using var to work around a WebKit bug
-    var cnvModel = document.getElementById('cnvModel');
+    cnvModel = document.getElementById('cnvModel');
 
     const pxRatio = Math.max(Math.floor(window.devicePixelRatio) || 1, 2);
     cnvModel.width = cnvModel.clientWidth;
@@ -36,11 +36,12 @@ map.on("load", () => {
     const gl = cnvModel.getContext('webgl', { antialiasing: false });
 
     wind = window.wind = new WindGL(gl);
-    wind.numParticles = 40000;
+    wind.numParticles = 75000;
 
+    var fade = 0.925;
     function frame() {
         if (wind.windData) {
-            wind.draw();
+            wind.draw(fade);
         }
         requestAnimationFrame(frame);
     }
@@ -59,29 +60,40 @@ map.on("load", () => {
     map.on("render", () => {
         // resetField();
         // console.log('idle')
+        // fade = 0.1;
         draw();
     });
 
 
-    // map.on('render', () => {
-    //     updateWind('black');
+    // map.on('idle', () => {
+    //     // updateWind('black');
+    //     fade = 0.925;
     // });
 
 
     map.on('mousemove', function (e) {
+        // console.log(e)
         var i = Math.round(pngWidth * e.point.x / cnvModel.width) + Math.round(pngHeight * e.point.y / cnvModel.height) * pngWidth;
         $("#latTracker").html(num2latlon(e.lngLat.lat, 'lat'));
         $("#lonTracker").html(num2latlon(e.lngLat.lng, 'lon'));
 
+        var rgba = ctx.getImageData(e.point.x, e.point.y, 1, 1).data,
+            u = 6 * rgba[0] / 255 - 3,
+            v = 6 * rgba[1] / 255 - 3;
+        $("#speedTracker").html(Math.sqrt(u ** 2 + v ** 2).toFixed(2) + " <sup>m</sup>&frasl;<sub>s</sub>");
+        // console.log(u,v)
         // if (Math.abs(direction[i]) === 135.0 || Math.abs(direction[i]) === 45.0) {
         // if (Math.abs(speed[i] - 0.016637806616154) < 0.000001) {
         // $("#speedTracker").html("-");
         // $("#directionTracker").html("-");
         // } else {
-        $("#speedTracker").html(speed[i].toFixed(3) + " <sup>m</sup>&frasl;<sub>s</sub>");
+        // $("#speedTracker").html(speed[i].toFixed(3) + " <sup>m</sup>&frasl;<sub>s</sub>");
         // $("#speedTracker").html(speed[i]);
         // $("#directionTracker").html(direction[i].toFixed(1) + " &deg;");
-        hand1.showValue(360 - direction[i], 100, am4core.ease.cubicOut); // --- Gause works clockwise
+        // hand1.showValue(360 - direction[i], 100, am4core.ease.cubicOut); // --- Gauge works clockwise
+        var dir = Math.atan2(v, u) * 180 / Math.PI;
+        dir = dir < 0 ? dir + 360 : dir;
+        hand1.showValue(360-dir, 100, am4core.ease.cubicOut); // --- Gauge works clockwise
         // }
     });
 
@@ -139,16 +151,15 @@ function draw() {
         // console.log(top, bottom, left, right, imgWidth, imgHeight);
 
         // --- Crop image for the visible part of map
-        var cnvTmp = document.createElement("canvas");
-        cnvTmp.width = imgWidth;                        // size of new image
-        cnvTmp.height = imgHeight;
-        var ctx = cnvTmp.getContext("2d");              // get the context
+        cnvTmp.width = cnvModel.clientWidth;                        // size of new image
+        cnvTmp.height = cnvModel.clientHeight;
+        // var ctx = cnvTmp.getContext("2d");              // get the context
 
         // --- Draw part of the first image onto the new canvas
         // ctx.drawImage(windImage, top, left, imgWidth, imgHeight);
-        ctx.drawImage(imgGlobal, left, top, imgWidth, imgHeight, 0, 0, imgWidth, imgHeight);
+        ctx.drawImage(imgGlobal, left, top, imgWidth, imgHeight, 0, 0, cnvTmp.width, cnvTmp.height);
 
-        // create a new image    
+        // create a new image
         var imgCropped = new Image();
 
         // set the src from the canvas 

@@ -4,4 +4,7 @@ var speed = [], direction = [];
 var pngWidth, pngHeight;
 var lastModelDate;
 var imgGlobal = new Image();
+var cnvModel;
+const cnvTmp = document.createElement("canvas");
+var ctx = cnvTmp.getContext("2d");
 var R = 6378137;

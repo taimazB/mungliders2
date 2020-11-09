@@ -225,21 +225,38 @@
     }\n
     `;
 
+    // var defaultRampColors = {
+    //     0.0: '#3288bd',
+    //     0.1: '#66c2a5',
+    //     0.2: '#abdda4',
+    //     0.3: '#e6f598',
+    //     0.4: '#fee08b',
+    //     0.5: '#fdae61',
+    //     0.6: '#f46d43',
+    //     1.0: '#d53e4f'
+    // };
+
+
     var defaultRampColors = {
-        0.0: '#3288bd',
-        0.1: '#66c2a5',
-        0.2: '#abdda4',
-        0.3: '#e6f598',
-        0.4: '#fee08b',
-        0.5: '#fdae61',
-        0.6: '#f46d43',
-        1.0: '#d53e4f'
+        // 0.0: "rgba(0,0,0,0)",
+        0.0: "#0099ff",
+        0.05: "#33cccc",
+        0.1: "#00ff99",
+        0.15: "#33cc33",
+        0.2: "#99ff33",
+        0.25: "#ffff00",
+        0.3: "#ff9933",
+        0.35: "#ff5050",
+        0.4: "#ff3399",
+        0.45: "#ff00ff",
+        0.5: "#9966ff",
     };
 
     var WindGL = function WindGL(gl) {
         this.gl = gl;
 
-        this.fadeOpacity = 0.996; // how fast the particle trails fade on each frame
+        // this.fadeOpacity = 0.996; // how fast the particle trails fade on each frame
+        // this.fadeOpacity = 0.925; // how fast the particle trails fade on each frame
         // this.speedFactor = 2.95; // how fast the particles move
         this.speedFactor = 5.; // how fast the particles move
         this.dropRate = 0.003; // how often the particles move to a random place
@@ -300,7 +317,9 @@
         // this.windTexture = createTexture(this.gl, this.gl.LINEAR, windData.data,windData.width,windData.height);
     };
 
-    WindGL.prototype.draw = function draw() {
+    // WindGL.prototype.draw = function draw() {
+        WindGL.prototype.draw = function draw(fade) {
+            this.fadeOpacity = fade;
         var gl = this.gl;
         gl.disable(gl.DEPTH_TEST);
         gl.disable(gl.STENCIL_TEST);
