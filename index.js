@@ -10,6 +10,7 @@ const csv = require('csv-parser')
 var _ = require("underscore")
 var glob = require("glob")
 var fs = require("fs");
+const { rgb } = require("d3");
 var PNG = require("pngjs").PNG;
 // var sleep = require('sleep');
 // const { csvParse } = require("d3");
@@ -39,7 +40,6 @@ app.post("/setPassword", function (req, res) {
 });
 
 app.get("/map", function (req, res) {
-  console.log(pass)
   if (pass == "letIn") {
     res.sendFile(__dirname + "/public/main.html");
   }
@@ -47,50 +47,79 @@ app.get("/map", function (req, res) {
 
 
 
-app.post("/prepareImage", function (req, res) {
-  var now = moment().format('x');
-  var time = req.body.time,
-    depth = req.body.depth,
-    model = req.body.model,
-    field = req.body.field,
-    lonMin = req.body.lonMin,
-    lonMax = req.body.lonMax,
-    latMin = req.body.latMin,
-    latMax = req.body.latMax;
+// app.post("/prepareImage", function (req, res) {
+//   var now = moment().format('x');
+//   var time = req.body.time,
+//     depth = req.body.depth,
+//     model = req.body.model,
+//     field = req.body.field
+//   // lonMin = req.body.lonMin,
+//   // lonMax = req.body.lonMax,
+//   // latMin = req.body.latMin,
+//   // latMax = req.body.latMax;
 
-  exec(`bash scripts/prepareImage.sh ${time} ${depth} ${model} ${field} ${lonMin} ${lonMax} ${latMin} ${latMax} ${now}`, function (err, stdout, stderr) {
-    while (!fs.existsSync(`public/tmp/${now}.json`) || !fs.existsSync(`public/tmp/${now}.png`)) { null };
+//   // exec(`bash scripts/prepareImage.sh ${time} ${depth} ${model} ${field} ${lonMin} ${lonMax} ${latMin} ${latMax} ${now}`, function (err, stdout, stderr) {
+//   //   while (!fs.existsSync(`public/tmp/${now}.json`) || !fs.existsSync(`public/tmp/${now}.png`)) { null };
 
-    // --- ?.png is created, then ...
-    // --- Convert png data to speed & direction arrays
-    var speed = [], direction = [];
-    var uvMin = -3., uvMax = 3.;
+//   // --- ?.png is created, then ...
+//   // --- Convert png data to speed & direction arrays
+//   // var speed = [], direction = [];
+//   // var uvMin = -3., uvMax = 3.;
 
-    fs.createReadStream(`public/tmp/${now}.png`)
-      .pipe(
-        new PNG({
-          filterType: -1,
-        })
-      )
-      .on("parsed", function () {
-        for (var y = 0; y < this.height; y++) {
-          for (var x = 0; x < this.width; x++) {
-            var i = (this.width * y + x) << 2;
-            var u = (this.data[i] / 255) * (uvMax - uvMin) + uvMin + 0.0117647058823529,
-              v = (this.data[i + 1] / 255) * (uvMax - uvMin) + uvMin - 0.0117647058823529;
-            // console.log(u, v, Math.sqrt(u ** 2 + v ** 2))
-            speed.push(Math.sqrt(u ** 2 + v ** 2));
-            tmpDir = Math.atan2(v, u) * 180 / Math.PI;
-            tmpDir = tmpDir >= 0 ? tmpDir : tmpDir + 360;
-            direction.push(tmpDir);
-          }
-        }
 
-        res.send({ timestamp: now, width: this.width, height: this.height, speed: speed, direction: direction });
-        res.end();
-      });
-  })
-});;
+//   fs.createReadStream(`public/models/RIOPS/UV/png/RIOPS_UV_20201105_21_0000.png`)
+//     .pipe(
+//       new PNG({
+//         filterType: -1,
+//       })
+//     )
+//     .on("parsed", function () {
+//       // var rgba = new Uint8Array(this.width * this.height * 4);
+//       // var rgba = [];
+//       // console.log(this.data.length)
+//       // rgba = this.data.map(d => { return +d });
+//       // rgba = [...this.data]
+//       // console.log(rgba, rgba.length)
+//       // for (var y = 0; y < this.height; y++) {
+//       //   for (var x = 0; x < this.width; x++) {
+//       //     var i = (this.width * y + x) << 2;
+//       // rgba[4 * i] = this.data[i];
+//       // rgba[4 * i + 1] = this.data[i + 1];
+//       // rgba[4 * i + 2] = 0;
+//       // rgba[4 * i + 3] = 0;
+//       // rgba.push([this.data[i],this.data[i+1],0,0]);
+//       // var u = (this.data[i] / 255) * (uvMax - uvMin) + uvMin + 0.0117647058823529,
+//       //   v = (this.data[i + 1] / 255) * (uvMax - uvMin) + uvMin - 0.0117647058823529;
+//       // // console.log(u, v, Math.sqrt(u ** 2 + v ** 2))
+//       // speed.push(Math.sqrt(u ** 2 + v ** 2));
+//       // tmpDir = Math.atan2(v, u) * 180 / Math.PI;
+//       // tmpDir = tmpDir >= 0 ? tmpDir : tmpDir + 360;
+//       // direction.push(tmpDir);
+//       //   }
+//       // }
+
+//       // res.send({ timestamp: now, width: this.width, height: this.height, speed: speed, direction: direction });
+//       // res.end();
+//       // console.log(this.data, this.data[0])
+//       // console.log(rgba)
+//       // var rgba = new Uint8Array(this.data);
+//       // console.log(rgba)
+//       res.send({ data: this.data });
+//       res.end();
+//     })
+
+
+//   // var rgba = [];
+//   // for (var i = 0; i < 1200; i++) {
+//   //   rgba.push(parseInt(Math.random()*255));
+//   //   rgba.push(parseInt(Math.random()*255));
+//   //   rgba.push(0);
+//   //   rgba.push(0);
+//   // }
+//   // res.send({ data: rgba });
+//   // res.end();
+
+// });
 
 
 app.post("/getAvailTimes", function (req, res) {

@@ -55,11 +55,12 @@
         gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, filter);
         gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, filter);
         if (data instanceof Uint8Array) {
-        gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, width, height, 0, gl.RGBA, gl.UNSIGNED_BYTE, data);
-        // gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, 16, 16, 0, gl.RGBA, gl.UNSIGNED_BYTE, data);
+            gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, width, height, 0, gl.RGBA, gl.UNSIGNED_BYTE, data);
         } else {
             gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, data);
         }
+        // gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, width, height, 0, gl.RGBA, gl.UNSIGNED_BYTE, data);
+
         gl.bindTexture(gl.TEXTURE_2D, null);
         return texture;
     }
@@ -100,14 +101,12 @@
     varying vec2 v_particle_pos;\n\n
     
     void main() {\n
-        vec4 color = texture2D(u_particles, vec2( fract(a_index / u_particles_res), floor(a_index / u_particles_res) / u_particles_res) );\n\n
+        vec4 color = texture2D(u_particles, vec2(fract(a_index / u_particles_res),floor(a_index / u_particles_res) / u_particles_res));\n\n
         
         // decode current particle position from the pixel's RGBA value\n
-        v_particle_pos = vec2( color.r / 255.0 + color.b, color.g / 255.0 + color.a );\n\n
+        v_particle_pos = vec2( color.r / 255.0 + color.b, color.g / 255.0 + color.a);\n\n
         
-        // if (color.r/255.>.1) { gl_PointSize = 0.; } else { gl_PointSize = 1.0; }\n
-        // if (color.r>.200) { gl_PointSize = 0.; } else { gl_PointSize = 1.0; }\n
-        // gl_PointSize = 1.0;\n
+        gl_PointSize = 1.0;\n
         gl_Position = vec4(2.0 * v_particle_pos.x - 1.0, 1.0 - 2.0 * v_particle_pos.y, 0, 1);\n
     }\n
     `;
@@ -124,11 +123,11 @@
     
     void main() {\n
         vec2 velocity = mix(u_wind_min, u_wind_max, texture2D(u_wind, v_particle_pos).rg);\n
-        float speed_t = (length(velocity)-0.01663780661) / length(u_wind_max);\n\n
+        float speed_t = length(velocity) / length(u_wind_max);\n\n
         
         // color ramp is encoded in a 16x16 texture\n
-        vec2 ramp_pos = vec2( fract(16.0 * speed_t), floor(16.0 * speed_t) / 16.0 );\n\n
-        
+        vec2 ramp_pos = vec2( fract(16.0 * speed_t), floor(16.0 * speed_t) / 16.0);\n\n
+
         gl_FragColor = texture2D(u_color_ramp, ramp_pos);\n
     }\n
     `;
@@ -162,7 +161,7 @@
     `;
 
     var updateFrag = `
-    precision highp float;\n
+    precision highp float;\n\n
     
     uniform sampler2D u_particles;\n
     uniform sampler2D u_wind;\n
@@ -198,14 +197,13 @@
     
     void main() {\n
         vec4 color = texture2D(u_particles, v_tex_pos);\n
-        vec2 pos = vec2( color.r / 255.0 + color.b, color.g / 255.0 + color.a ); // decode particle position from pixel RGBA\n\n
-            
+        vec2 pos = vec2( color.r / 255.0 + color.b, color.g / 255.0 + color.a); // decode particle position from pixel RGBA\n\n
+        
         vec2 velocity = mix(u_wind_min, u_wind_max, lookup_wind(pos));\n
-        float speed_t = (length(velocity)-0.01663780661) / length(u_wind_max);\n\n
+        float speed_t = length(velocity) / length(u_wind_max);\n\n
         
         // take EPSG:4236 distortion into account for calculating where the particle moved\n
-        float distortion = 1.;\n
-        //cos(radians(latMin+pos.y*dlat));\n
+        float distortion = 1.\n;
         // cos(radians(pos.y * 180.0 - 90.0));\n
         vec2 offset = vec2(velocity.x / distortion, -velocity.y) * 0.0001 * u_speed_factor;\n\n
         
@@ -219,61 +217,31 @@
         float drop_rate = u_drop_rate + speed_t * u_drop_rate_bump;\n
         float drop = step(1.0 - drop_rate, rand(seed));\n\n
         
-        vec2 random_pos = vec2( rand(seed + 1.3), rand(seed + 2.1) );\n
+        vec2 random_pos = vec2( rand(seed + 1.3), rand(seed + 2.1));\n
         pos = mix(pos, random_pos, drop);\n\n
-            
+        
         // encode the new particle position back into RGBA\n
-        gl_FragColor = vec4( fract(pos * 255.0), floor(pos * 255.0) / 255.0 );\n
+        gl_FragColor = vec4( fract(pos * 255.0), floor(pos * 255.0) / 255.0);\n
     }\n
     `;
 
-    // var defaultRampColors = {
-    //     // 0.0: "rgba(0,0,0,0)",
-    //     0.0: "#3288bd",
-    //     0.1: '#66c2a5',
-    //     0.2: '#abdda4',
-    //     0.3: '#e6f598',
-    //     0.4: '#fee08b',
-    //     0.5: '#fdae61',
-    //     0.6: '#f46d43',
-    //     0.7: '#d53e4f'
-    // };
-
     var defaultRampColors = {
-        // 0.0: "rgba(0,0,0,0)",
-        0.001: "#0099ff",
-        0.05: "#33cccc",
-        0.1: "#00ff99",
-        0.15: "#33cc33",
-        0.2: "#99ff33",
-        0.25: "#ffff00",
-        0.3: "#ff9933",
-        0.35: "#ff5050",
-        0.4: "#ff3399",
-        0.45: "#ff00ff",
-        0.5: "#9966ff",
-
-
+        0.0: '#3288bd',
+        0.1: '#66c2a5',
+        0.2: '#abdda4',
+        0.3: '#e6f598',
+        0.4: '#fee08b',
+        0.5: '#fdae61',
+        0.6: '#f46d43',
+        1.0: '#d53e4f'
     };
-
-    // var defaultRampColors = {
-    //     0.0: "rgba(0,0,0,0)",
-    //     0.01: "#3288bd",
-    //     0.01: '#66c2a5',
-    //     0.02: '#abdda4',
-    //     0.03: '#e6f598',
-    //     0.04: '#fee08b',
-    //     0.05: '#fdae61',
-    //     0.06: '#f46d43',
-    //     0.07: '#d53e4f'
-    // };
-
 
     var WindGL = function WindGL(gl) {
         this.gl = gl;
 
         this.fadeOpacity = 0.996; // how fast the particle trails fade on each frame
-        this.speedFactor = .4 //0.25; // how fast the particles move
+        // this.speedFactor = 2.95; // how fast the particles move
+        this.speedFactor = 5.; // how fast the particles move
         this.dropRate = 0.003; // how often the particles move to a random place
         this.dropRateBump = 0.01; // drop rate increase relative to individual particle speed
 
@@ -329,13 +297,7 @@
     WindGL.prototype.setWind = function setWind(windData) {
         this.windData = windData;
         this.windTexture = createTexture(this.gl, this.gl.LINEAR, windData.image);
-        console.log("setWind")
-        // this.windTexture = createTexture(this.gl, this.gl.LINEAR, windData.data, windData.width, windData.height);
-    };
-
-    WindGL.prototype.clearWind = function clearWind() {
-        this.gl.clearColor(0.0, 0.0, 0.0, 1.0);
-        this.gl.clear(this.gl.COLOR_BUFFER_BIT)
+        // this.windTexture = createTexture(this.gl, this.gl.LINEAR, windData.data,windData.width,windData.height);
     };
 
     WindGL.prototype.draw = function draw() {
@@ -398,10 +360,8 @@
         gl.uniform1i(program.u_color_ramp, 2);
 
         gl.uniform1f(program.u_particles_res, this.particleStateResolution);
-        // gl.uniform2f(program.u_wind_min, this.windData.uMin, this.windData.vMin);
-        // gl.uniform2f(program.u_wind_max, this.windData.uMax, this.windData.vMax);
-        gl.uniform2f(program.u_wind_min, -3, -3);
-        gl.uniform2f(program.u_wind_max, 3, 3);
+        gl.uniform2f(program.u_wind_min, this.windData.uMin, this.windData.vMin);
+        gl.uniform2f(program.u_wind_max, this.windData.uMax, this.windData.vMax);
 
         gl.drawArrays(gl.POINTS, 0, this._numParticles);
     };
@@ -421,11 +381,8 @@
 
         gl.uniform1f(program.u_rand_seed, Math.random());
         gl.uniform2f(program.u_wind_res, this.windData.width, this.windData.height);
-        // gl.uniform2f(program.u_wind_min, this.windData.uMin, this.windData.vMin);
-        // gl.uniform2f(program.u_wind_max, this.windData.uMax, this.windData.vMax);
-        // gl.uniform2f(program.u_wind_res, 10, 8);
-        gl.uniform2f(program.u_wind_min, -3, -3);
-        gl.uniform2f(program.u_wind_max, 3, 3);
+        gl.uniform2f(program.u_wind_min, this.windData.uMin, this.windData.vMin);
+        gl.uniform2f(program.u_wind_max, this.windData.uMax, this.windData.vMax);
         gl.uniform1f(program.u_speed_factor, this.speedFactor);
         gl.uniform1f(program.u_drop_rate, this.dropRate);
         gl.uniform1f(program.u_drop_rate_bump, this.dropRateBump);
@@ -454,6 +411,7 @@
 
         ctx.fillStyle = gradient;
         ctx.fillRect(0, 0, 256, 1);
+
         return new Uint8Array(ctx.getImageData(0, 0, 256, 1).data);
     }
 

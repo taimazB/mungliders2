@@ -67,7 +67,7 @@ function getAvailTimes(model, field) {
 $('.ui.sidebar')
     .sidebar('setting', 'dimPage', false)
     .sidebar('setting', 'closable', false)
-    // .sidebar('toggle')
+// .sidebar('toggle')
 
 
 ///////////////////////////////////////////-----------------\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
@@ -127,7 +127,6 @@ function init_ddField() {
     })
         .dropdown('set selected', '0')
         .dropdown('setting', 'onChange', (i, selectedField) => {
-            resetField();
             field = fields.filter(d => d.field == selectedField)[0];
             init_ddModel();
             // draw();
@@ -144,7 +143,6 @@ function init_ddModel() {
         .dropdown('set selected', '0')
         .dropdown('setting', 'onChange', (i, selectedModel) => {
             $("#activeModel").html(selectedModel);
-            resetField();
             field = fields.filter(d => d.field == field.field && d.model == selectedModel)[0];
             init_ddTime();
             init_ddDepth();
@@ -163,7 +161,6 @@ function init_ddTime() {
         })
         .dropdown('set selected', findClosestDateTime(lastModelDate, field.times).index)
         .dropdown('setting', 'onChange', (i, selectedTime) => {
-            resetField();
             lastModelDate = field.times[i];
             field.time = lastModelDate;
             draw();
@@ -179,7 +176,6 @@ function init_ddDepth() {
     })
         .dropdown('set selected', '0')
         .dropdown('setting', 'onChange', (i, selectedDepth) => {
-            resetField();
             field.depth = selectedDepth;
             draw();
         })
