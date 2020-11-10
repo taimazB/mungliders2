@@ -240,7 +240,7 @@ function addPP2Map(data) {
             }
         },
         'paint': {
-            'circle-color': '#000',
+            'circle-color': 'white',
             'circle-opacity': 1.
         }
     });
@@ -270,7 +270,7 @@ function addPP2Map(data) {
             }
         },
         'paint': {
-            'line-color': '#000'
+            'line-color': 'white'
         }
     });
 
@@ -316,7 +316,7 @@ function addPP2Map(data) {
             'text-justify': 'auto'
         },
         'paint': {
-            'text-color': "rgb(80,80,80)",
+            'text-color': "rgb(180,180,180)",
             // 'text-halo-color': "rgb(160,20,20)"
         }
     });

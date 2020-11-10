@@ -70,11 +70,6 @@
     <script src="https://cdn.amcharts.com/lib/4/themes/dataviz.js"></script>
     <script src="https://cdn.amcharts.com/lib/4/themes/animated.js"></script>
 
-    <!-- UPNG -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/upng-js/2.1.0/UPNG.min.js"
-        integrity="sha512-0EGvUncys73hZ+0MCLp5YxHM29nv0HO8oMVK0Tsz0DtuGa6G8+6YZUdHdt3gN1rKsVWvxuBmCj0y/2Zon7yopQ=="
-        crossorigin="anonymous"></script>
-
     <!-- Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Ubuntu:wght@700&display=swap" rel="stylesheet">
 
@@ -147,14 +142,40 @@
 
                                 <!-- TIME -->
                                 <div class="eight wide column">Forecast:</div>
-                                <div class="eight wide column px-0">
-                                    <div id="ddTime" class="ui selection dropdown"
-                                        style="min-width:-webkit-fill-available;">
-                                        <input type="hidden">
-                                        <i class="dropdown icon"></i>
-                                        <div class="default text">Forecast</div>
+                                <div class="eight wide column">
+                                    <div class="ui grid">
+                                        <div class="two wide column px-0" style="text-align: center;">
+                                            <i id="dayDown" class="fas fa-angle-left clickable"></i>
+                                        </div>
+                                        <div class="twelve wide column px-0">
+                                            <div id="ddDate" class="ui selection dropdown"
+                                                style="min-width:-webkit-fill-available;">
+                                                <input type="hidden">
+                                                <i class="dropdown icon"></i>
+                                                <div class="default text">Date</div>
+                                            </div>
+                                        </div>
+                                        <div class="two wide column px-0" style="text-align: center;">
+                                            <i id="dayUp" class="fas fa-angle-right clickable"></i>
+                                        </div>
+
+                                        <div class="two wide column px-0" style="text-align: center;">
+                                            <i id="timeDown" class="fas fa-angle-left clickable"></i>
+                                        </div>
+                                        <div class="twelve wide column px-0">
+                                            <div id="ddTime" class="ui selection dropdown"
+                                                style="min-width:-webkit-fill-available;">
+                                                <input type="hidden">
+                                                <i class="dropdown icon"></i>
+                                                <div class="default text">Hour</div>
+                                            </div>
+                                        </div>
+                                        <div class="two wide column px-0" style="text-align: center;">
+                                            <i id="timeUp" class="fas fa-angle-right clickable"></i>
+                                        </div>
                                     </div>
                                 </div>
+
 
                                 <!-- DEPTH -->
                                 <div class="eight wide column">Depth:</div>
@@ -508,7 +529,7 @@
 
     <!-- <div class="pusher" style="width: 77.5%;"> -->
     <div style="width: 77.5%; height: 100%;position: absolute; right: 0">
-        <canvas id="cnvModel"></canvas>
+        <canvas id="cnvModel" style="background-color: black;"></canvas>
         <canvas id="cnvPathPlanning"></canvas>
         <div id="map" style="position: absolute; width: 100%; height: 100vh;"></div>
 
@@ -537,8 +558,7 @@
     <script src="./js/globals.js"></script>
     <script src="./js/tools.js"></script>
     <script src="./js/initialize.js"></script>
-    <!-- <script src="./js/wind-gl.js"></script> -->
-    <script src="./js/wind-gl_org.js"></script>
+    <script src="./js/wind-gl.js"></script>
     <script src="./js/main.js"></script>
     <script src="./js/gauge.js"></script>
 

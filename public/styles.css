@@ -42,3 +42,6 @@ div {
 
 /* LOGIN PAGE */
 
+.clickable {
+    cursor: pointer;
+}
