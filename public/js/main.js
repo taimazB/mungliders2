@@ -6,7 +6,7 @@ var map = new mapboxgl.Map({
     minZoom: 3,
     zoom: 4,
     center: [-52.71, 47.56],
-    maxBounds: [[-179.5, -79.5], [179.5, 79.5]],  // --- png files lat from 80S to 80N.  lon limit for bash file.
+    maxBounds: [[-179.5, -79.5], [179.5, 79.5]],  // --- jpg files lat from 80S to 80N.  lon limit for bash file.
     // animate: false,
     // style: 'mapbox://styles/mapbox/dark-v10'
     // style: 'mapbox://styles/mapbox/satellite-v9',
@@ -87,7 +87,7 @@ map.on("load", () => {
 function draw() {
     var bnds = map.getBounds();
 
-    imgGlobal.src = `models/${field.model}/${field.field}/jpg/${field.model}_${field.field}_${field.dateTime.format("YYYYMMDD_HH")}_${zeroPad(field.depth, 4)}.jpg`;
+    imgGlobal.src = `models/${field.model}/${field.field}/jpg/${field.model}_${field.field}_${field.dateTime.format("YYYYMMDD_HH")}_${field.depth.name}.jpg`;
     imgGlobal.onload = () => {
         var top = imgGlobal.naturalHeight * (1 - (lat2y(bnds._ne.lat) + lat2y(80)) / (2 * lat2y(80)));
         var bottom = imgGlobal.naturalHeight * (1 - (lat2y(bnds._sw.lat) + lat2y(80)) / (2 * lat2y(80)));

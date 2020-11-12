@@ -11,7 +11,6 @@ var _ = require("underscore")
 var glob = require("glob")
 var fs = require("fs");
 const { rgb } = require("d3");
-var PNG = require("pngjs").PNG;
 // var sleep = require('sleep');
 // const { csvParse } = require("d3");
 // var zip = require("express-zip");

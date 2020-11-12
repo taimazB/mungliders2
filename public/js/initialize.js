@@ -73,8 +73,18 @@ fields = [
     {
         field: "UV",
         model: "RIOPS",
-        depths: [0, 1, 2, 3, 5, 6, 8, 9, 11, 13, 16, 19, 22, 26, 30, 35, 41, 47, 53, 61, 69, 77, 86, 97, 108, 120, 133, 147, 163, 180, 199, 221, 244, 271, 300, 333, 370, 411, 457, 508, 565, 628, 697, 773, 856, 947, 1045, 1151, 1265, 1387, 1516, 1652, 1795, 1945, 2101, 2262, 2429, 2600, 2776, 2955, 3138, 3324, 3513, 3704, 3897, 4093, 4289, 4488, 4687, 4888, 5089, 5291, 5494, 5698, 5902],
-        depth: 0,
+        depths: [
+            { name: "0000-0010", text: "Surface (0-10 m)" },
+            { name: "0010-0050", text: "10 - 50 m" },
+            { name: "0050-0100", text: "50 - 100 m" },
+            { name: "0100-0200", text: "100 - 200 m" },
+            { name: "0200-0500", text: "200 - 500 m" },
+            { name: "0500-1000", text: "500 m - 1 km" },
+            { name: "1000-1500", text: "1 - 1.5 km" },
+            { name: "1500-2000", text: "1.5 - 2 km" },
+            { name: "2000-20000", text: "Bottom (below 2 km)" }
+        ],
+        depth: null,
         latestRun: null,
         dateTimes: getAvailTimes("RIOPS", "UV").map(d => moment.utc(d, "YYYYMMDD_HH")),
         dateTime: null
@@ -82,8 +92,18 @@ fields = [
     {
         field: "UV",
         model: "HYCOM",
-        depths: [0, 2, 4, 6, 8, 10, 12, 15, 20, 25, 30, 35, 40, 45, 50, 60, 70, 80, 90, 100, 125, 150, 200, 250, 300, 350, 400, 500, 600, 700, 800, 900, 1000, 1250, 1500, 2000, 2500, 3000, 4000, 5000],
-        depth: 0,
+        depths: [
+            { name: "0000-0010", text: "Surface (0-10 m)" },
+            { name: "0010-0050", text: "10 - 50 m" },
+            { name: "0050-0100", text: "50 - 100 m" },
+            { name: "0100-0200", text: "100 - 200 m" },
+            { name: "0200-0500", text: "200 - 500 m" },
+            { name: "0500-1000", text: "500 m - 1 km" },
+            { name: "1000-1500", text: "1 - 1.5 km" },
+            { name: "1500-2000", text: "1.5 - 2 km" },
+            { name: "2000-20000", text: "Bottom (below 2 km)" }
+        ],
+        depth: null,
         latestRun: null,
         dateTimes: getAvailTimes("HYCOM", "UV").map(d => moment.utc(d, "YYYYMMDD_HH")),
         dateTime: null
@@ -145,7 +165,7 @@ function init_ddModel() {
             field = fields.filter(d => d.field == field.field && d.model == selectedModel)[0];
             lastModelDateTime = field.dateTimes[findClosestDateTime(lastModelDateTime, field.dateTimes).index];
             availDates = _.uniq(fields.filter(d => { return d.field == field.field && d.model == field.model })[0].dateTimes.map(d => d.format("MMM D"))).map((d, i) => { return { name: d, value: i } });
-            availTimes = _.uniq(fields.filter(d => { return d.field == field.field && d.model == field.model })[0].dateTimes.map(d => d.format("HH"))).map((d, i) => { return { name: d + ":00", value: i } });
+            availTimes = _.uniq(fields.filter(d => { return d.field == field.field && d.model == field.model })[0].dateTimes.map(d => d.format("HH"))).sort().map((d, i) => { return { name: d + ":00", value: i } });
             init_ddDate();
             init_ddTime();
             init_ddDepth();
@@ -154,7 +174,7 @@ function init_ddModel() {
 
     lastModelDateTime = field.dateTimes[findClosestDateTime(lastModelDateTime, field.dateTimes).index];
     availDates = _.uniq(fields.filter(d => { return d.field == field.field && d.model == field.model })[0].dateTimes.map(d => d.format("MMM D"))).map((d, i) => { return { name: d, value: i } });
-    availTimes = _.uniq(fields.filter(d => { return d.field == field.field && d.model == field.model })[0].dateTimes.map(d => d.format("HH"))).map((d, i) => { return { name: d + ":00", value: i } });
+    availTimes = _.uniq(fields.filter(d => { return d.field == field.field && d.model == field.model })[0].dateTimes.map(d => d.format("HH"))).sort().map((d, i) => { return { name: d + ":00", value: i } });
 
     init_ddDate();
     init_ddTime();
@@ -162,6 +182,8 @@ function init_ddModel() {
 }
 
 function init_ddDate() {
+    field.dateTime = lastModelDateTime;
+
     $('#ddDate')
         .dropdown({
             values: availDates,
@@ -173,11 +195,11 @@ function init_ddDate() {
             field.dateTime = lastModelDateTime;
             draw();
         })
-
-    field.dateTime = lastModelDateTime;
 }
 
 function init_ddTime() {
+    field.dateTime = lastModelDateTime;
+
     $('#ddTime')
         .dropdown({
             values: availTimes
@@ -188,21 +210,19 @@ function init_ddTime() {
             field.dateTime = lastModelDateTime;
             draw();
         })
-
-    field.dateTime = lastModelDateTime;
 }
 
 function init_ddDepth() {
+    field.depth = field.depths[0];
+
     $('#ddDepth').dropdown({
-        values: fields.filter(d => { return d.field == field.field && d.model == field.model })[0].depths.map((d, i) => { return { name: d, value: i } }),
+        values: fields.filter(d => { return d.field == field.field && d.model == field.model })[0].depths.map((d, i) => { return { name: d.text, value: i } }),
     })
-        .dropdown('set selected', '0')
-        .dropdown('setting', 'onChange', (i, selectedDepth) => {
-            field.depth = selectedDepth;
+        .dropdown('set selected', field.depth.text)
+        .dropdown('setting', 'onChange', (i) => {
+            field.depth = field.depths[i];
             draw();
         })
-
-    field.depth = field.depths[0];
 }
 
 init_ddField();
