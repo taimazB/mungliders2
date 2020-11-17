@@ -70,6 +70,11 @@
     <script src="https://cdn.amcharts.com/lib/4/themes/dataviz.js"></script>
     <script src="https://cdn.amcharts.com/lib/4/themes/animated.js"></script>
 
+    <!-- Google-palette -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/google-palette/1.1.0/palette.js"
+        integrity="sha512-C8lBe+d5Peg8kU+0fyU+JfoDIf0kP1rQBuPwRSBNHqqvqaPu+rkjlY0zPPAqdJOLSFlVI+Wku32S7La7eFhvlA=="
+        crossorigin="anonymous"></script>
+
     <!-- Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Ubuntu:wght@700&display=swap" rel="stylesheet">
 
@@ -77,7 +82,6 @@
     <!-- Styles -->
     <link rel="stylesheet" type="text/css" href="styles.css" />
 </head>
-
 
 
 <body>
@@ -89,16 +93,20 @@
                 <!-- TAB HEADERS -->
                 <div class="one wide column" style="padding:0; margin: 0; height: 90vh;">
                     <button name="tabModels" class="ui inverted icon button tabButtons active"
-                        data-content="Overlay Model Fields" style="height: 30vh;">
+                        data-content="Overlay Model Fields" style="height: 27vh;">
                         <i class="fas fa-globe-americas"></i>
                     </button>
                     <button name="tabPathPlanning" class="ui inverted icon button tabButtons"
-                        data-content="Path Planning" style="height: 30vh;">
+                        data-content="Path Planning" style="height: 27vh;">
                         <i class="fas fa-route"></i>
                     </button>
                     <button name="tabMissionsArchieve" class="ui inverted icon button tabButtons"
-                        data-content="Missions Archieve" style="height: 30vh;">
+                        data-content="Missions Archieve" style="height: 27vh;">
                         <i class="fas fa-archive"></i>
+                    </button>
+                    <button name="tabSettings" class="ui inverted icon button tabButtons" data-content="Settings"
+                        style="height: 9vh;">
+                        <i class="fas fa-cog"></i>
                     </button>
                 </div>
 
@@ -498,6 +506,21 @@
                             </div>
                         </div>
 
+                        <!-- SETTINGS TAB -->
+                        <div id="tabSettings" class="ui segment inverted tabContent" style="display: none;">
+                            <div class="ui grid inverted">
+
+                                <div class="eight wide column">Animation</div>
+                                <div class="eight wide column">
+                                    <div id="chkAnimation" class="ui toggle checkbox">
+                                        <input type="checkbox" name="public" checked="checked">
+                                        <label style="margin: auto; margin-left: 1px;"></label>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="ui divider"></div>
+                        </div>
+
                     </div>
                 </div>
             </div>
@@ -529,7 +552,8 @@
 
     <!-- <div class="pusher" style="width: 77.5%;"> -->
     <div style="width: 77.5%; height: 100%;position: absolute; right: 0">
-        <canvas id="cnvModel" style="background-color: black;"></canvas>
+        <canvas id="cnvModel_gl" class="canvas" style="background-color: currentColor; display: block;"></canvas>
+        <canvas id="cnvModel_2d" class="canvas" style="background-color: currentColor; display: none;"></canvas>
         <canvas id="cnvPathPlanning"></canvas>
         <div id="map" style="position: absolute; width: 100%; height: 100vh;"></div>
 
@@ -559,6 +583,8 @@
     <script src="./js/tools.js"></script>
     <script src="./js/initialize.js"></script>
     <script src="./js/wind-gl.js"></script>
+    <script src="./js/staticArrows.js"></script>
+    <script src="./js/animatedArrows.js"></script>
     <script src="./js/main.js"></script>
     <script src="./js/gauge.js"></script>
 

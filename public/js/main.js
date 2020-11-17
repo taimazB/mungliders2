@@ -25,16 +25,13 @@ map.on("load", () => {
     )
 
     // using var to work around a WebKit bug
-    cnvModel = document.getElementById('cnvModel');
+    cnvModel_gl = document.getElementById('cnvModel_gl');
 
-    const pxRatio = Math.max(Math.floor(window.devicePixelRatio) || 1, 2);
-    cnvModel.width = cnvModel.clientWidth;
-    cnvModel.height = cnvModel.clientHeight;
-
-    const gl = cnvModel.getContext('webgl', { antialiasing: false });
+    // const pxRatio = Math.max(Math.floor(window.devicePixelRatio) || 1, 2);
+    const gl = cnvModel_gl.getContext('webgl', { antialiasing: false });
 
     wind = window.wind = new WindGL(gl);
-    wind.numParticles = 75000;
+    wind.numParticles = 50000;
 
     var fade = 0.925;
     function frame() {
@@ -48,8 +45,8 @@ map.on("load", () => {
 
     // function updateRetina() {
     //     const ratio = meta['retina resolution'] ? pxRatio : 1;
-    //     cnvModel.width = cnvModel.clientWidth * ratio;
-    //     cnvModel.height = cnvModel.clientHeight * ratio;
+    //     cnvModel_gl.width = cnvModel_gl.clientWidth * ratio;
+    //     cnvModel_gl.height = cnvModel_gl.clientHeight * ratio;
     //     wind.resize();
     // }
 
@@ -62,7 +59,7 @@ map.on("load", () => {
         $("#latTracker").html(num2latlon(e.lngLat.lat, 'lat'));
         $("#lonTracker").html(num2latlon(e.lngLat.lng, 'lon'));
 
-        var rgba = ctx.getImageData(e.point.x, e.point.y, 1, 1).data,
+        var rgba = ctxTmp.getImageData(e.point.x, e.point.y, 1, 1).data,
             u = 6 * rgba[0] / 255 - 3,
             v = 6 * rgba[1] / 255 - 3;
 
@@ -86,6 +83,7 @@ map.on("load", () => {
 
 function draw() {
     var bnds = map.getBounds();
+    // bnds = { _ne: { lat: 50, lng: -50 }, _sw: { lat: 40, lng: -40 } }
 
     imgGlobal.src = `models/${field.model}/${field.field}/jpg/${field.model}_${field.field}_${field.dateTime.format("YYYYMMDD_HH")}_${field.depth.name}.jpg`;
     imgGlobal.onload = () => {
@@ -97,40 +95,20 @@ function draw() {
         var imgHeight = bottom - top;
 
         // --- Crop image for the visible part of map
-        cnvTmp.width = cnvModel.clientWidth;                        // size of new image
-        cnvTmp.height = cnvModel.clientHeight;
+        cnvTmp.width = mapWidth;                        // size of new image
+        cnvTmp.height = mapHeight;
 
         // --- Draw part of the first image onto the new canvas
-        ctx.drawImage(imgGlobal, left, top, imgWidth, imgHeight, 0, 0, cnvTmp.width, cnvTmp.height);
+        ctxTmp = cnvTmp.getContext("2d");
+        ctxTmp.drawImage(imgGlobal, left, top, imgWidth, imgHeight, 0, 0, cnvTmp.width, cnvTmp.height);
 
-        // create a new image
-        var imgCropped = new Image();
-
-        // set the src from the canvas 
-        imgCropped.src = cnvTmp.toDataURL();
-
-        updateWind(imgCropped);
-    }
-
-    function updateWind(img) {
-        getJSON(`models/${field.model}/${field.field}/json/${field.model}_${field.field}.json`, function (windData) {
-            windData.image = img;
-            wind.setWind(windData);
-        });
-
-
-        function getJSON(url, callback) {
-            const xhr = new XMLHttpRequest();
-            xhr.responseType = 'json';
-            xhr.open('get', url, true);
-            xhr.onload = function () {
-                if (xhr.status >= 200 && xhr.status < 300) {
-                    callback(xhr.response);
-                } else {
-                    throw new Error(xhr.statusText);
-                }
-            };
-            xhr.send();
+        if (isAnimation) {
+            var imgCropped = new Image();
+            imgCropped.src = cnvTmp.toDataURL();
+            animateArrows(imgCropped); console.log('anim')
+        }
+        else {
+            staticArrows(ctxTmp); console.log('static')
         }
     }
 }

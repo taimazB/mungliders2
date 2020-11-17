@@ -28,6 +28,9 @@ $(".tabButtons").on("click", (e) => {
         case "tabMissionsArchieve":
             $("#tabMissionsArchieve").css("display", "block");
             break;
+        case "tabSettings":
+            $("#tabSettings").css("display", "block");
+            break;
         default:
         // $("#tabModels").css("display", "block");
     }
@@ -266,3 +269,32 @@ $("#timeUp").on("click", () => {
         $("#ddTime").dropdown("set value", iTime + 1).dropdown("set text", availTimes[iTime + 1].name);
     }
 })
+
+
+
+///////////////////////////////////////////------------------\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+//----------------------------------------- SET WIDTH/HEIGHT -----------------------------------------\\
+mapWidth = parseInt($("#map").css("width"));
+mapHeight = parseInt($("#map").css("height"));
+
+$('.canvas').attr("width", mapWidth);
+$('.canvas').attr("height", mapHeight);
+
+
+
+colorPalette = palette('tol-rainbow', maxColors)
+
+
+
+$(".checkbox")
+    .checkbox({
+        onChange: () => {
+            isAnimation = $("#chkAnimation").checkbox('is checked');
+            $('.canvas').css('display', 'none');
+
+            if (isAnimation) { $("#cnvModel_gl").css('display', 'block') }
+            else { $("#cnvModel_2d").css('display', 'block') };
+            // setTimeout(()=>{draw()},5000)
+            draw();
+        }
+    });
