@@ -123,9 +123,10 @@ app.get("/map", function (req, res) {
 
 app.post("/getAvailTimes", function (req, res) {
   var model = req.body.model,
-    field = req.body.field;
+    field = req.body.field,
+    i = req.body.i;
 
-  res.send([...new Set(fs.readdirSync(`public/models/${model}/${field}/jpg/`).map(d => d.split("_").slice(2, 4).join("_")))])
+  res.send([...new Set(fs.readdirSync(`public/models/${model}/${field}/jpg/`).map(d => d.split("_").slice(2, 2+i).join("_")))])
   res.end();
 });
 
