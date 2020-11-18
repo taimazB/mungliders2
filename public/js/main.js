@@ -52,28 +52,7 @@ map.on("load", () => {
 
 
     map.on("render", () => {
-        draw();
-    });
-
-    map.on('mousemove', function (e) {
-        $("#latTracker").html(num2latlon(e.lngLat.lat, 'lat'));
-        $("#lonTracker").html(num2latlon(e.lngLat.lng, 'lon'));
-
-        var rgba = ctxTmp.getImageData(e.point.x, e.point.y, 1, 1).data,
-            u = 6 * rgba[0] / 255 - 3,
-            v = 6 * rgba[1] / 255 - 3;
-
-        // --- Blue channel is used for NaN (0) values.
-        if (rgba[2] == 255) {
-            u = 0;
-            v = 0;
-        }
-
-        $("#speedTracker").html(Math.sqrt(u ** 2 + v ** 2).toFixed(3) + " <sup>m</sup>&frasl;<sub>s</sub>");
-
-        var dir = Math.atan2(v, u) * 180 / Math.PI;
-        dir = dir < 0 ? dir + 360 : dir;
-        hand1.showValue(360 - dir, 100, am4core.ease.cubicOut); // --- Gauge works clockwise
+        draw({ init: false });
     });
 });
 
@@ -81,34 +60,21 @@ map.on("load", () => {
 
 
 
-function draw() {
-    var bnds = map.getBounds();
+function draw(init) {
+    bnds = map.getBounds();
     // bnds = { _ne: { lat: 50, lng: -50 }, _sw: { lat: 40, lng: -40 } }
 
-    imgGlobal.src = `models/${field.model}/${field.field}/jpg/${field.model}_${field.field}_${field.dateTime.format("YYYYMMDD_HH")}_${field.depth.name}.jpg`;
-    imgGlobal.onload = () => {
-        var top = imgGlobal.naturalHeight * (1 - (lat2y(bnds._ne.lat) + lat2y(80)) / (2 * lat2y(80)));
-        var bottom = imgGlobal.naturalHeight * (1 - (lat2y(bnds._sw.lat) + lat2y(80)) / (2 * lat2y(80)));
-        var left = imgGlobal.naturalWidth * (bnds._sw.lng + 180) / 360;
-        var right = imgGlobal.naturalWidth * (bnds._ne.lng + 180) / 360;
-        var imgWidth = right - left;
-        var imgHeight = bottom - top;
-
-        // --- Crop image for the visible part of map
-        cnvTmp.width = mapWidth;                        // size of new image
-        cnvTmp.height = mapHeight;
-
-        // --- Draw part of the first image onto the new canvas
-        ctxTmp = cnvTmp.getContext("2d");
-        ctxTmp.drawImage(imgGlobal, left, top, imgWidth, imgHeight, 0, 0, cnvTmp.width, cnvTmp.height);
-
-        if (isAnimation) {
-            var imgCropped = new Image();
-            imgCropped.src = cnvTmp.toDataURL();
-            animateArrows(imgCropped); console.log('anim')
-        }
-        else {
-            staticArrows(ctxTmp); console.log('static')
-        }
+    switch (field.field) {
+        case "UV":
+            currentInit();
+            break;
+        case "SST":
+            init.init ? sstInit() : sstMove();
+            break;
+        default:
+            null;
     }
 }
+
+// --- Initial load
+draw();

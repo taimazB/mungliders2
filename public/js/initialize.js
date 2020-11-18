@@ -45,13 +45,13 @@ $('.ui .accordion')
     ;
 
 
-function getAvailTimes(model, field) {
+function getAvailTimes(model, field, i) {
     var results;
     $.ajax({
         url: "/getAvailTimes",
         type: "POST",
         async: false,
-        data: { model: model, field: field },
+        data: { model: model, field: field, i: i },
         success: function (data, textStatus, jqXHR) {
             results = data;
         },
@@ -89,7 +89,7 @@ fields = [
         ],
         depth: null,
         latestRun: null,
-        dateTimes: getAvailTimes("RIOPS", "UV").map(d => moment.utc(d, "YYYYMMDD_HH")),
+        dateTimes: getAvailTimes("RIOPS", "UV", 2).map(d => moment.utc(d, "YYYYMMDD_HH")),
         dateTime: null
     },
     {
@@ -108,16 +108,16 @@ fields = [
         ],
         depth: null,
         latestRun: null,
-        dateTimes: getAvailTimes("HYCOM", "UV").map(d => moment.utc(d, "YYYYMMDD_HH")),
+        dateTimes: getAvailTimes("HYCOM", "UV", 2).map(d => moment.utc(d, "YYYYMMDD_HH")),
         dateTime: null
     },
     {
         field: "SST",
-        model: "jplMUR41",
+        model: "JPLMUR41",
         depths: null,
         depth: null,
         latestRun: null,
-        dateTimes: null,
+        dateTimes: getAvailTimes("JPLMUR41", "SST", 1).map(d => moment.utc(d, "YYYYMMDD")),
         dateTime: null
     }
 ]
@@ -150,8 +150,21 @@ function init_ddField() {
         .dropdown('set selected', '0')
         .dropdown('setting', 'onChange', (i, selectedField) => {
             field = fields.filter(d => d.field == selectedField)[0];
+            switch (field.field) {
+                case "UV":
+                    $('.canvas').css('display', 'none');
+                    if (isAnimation) { $("#cnvModel_gl").css('display', 'block') }
+                    else { $("#cnvModel_2d").css('display', 'block') };
+                    break;
+                case "SST":
+                    $('.canvas').css('display', 'none');
+                    $("#cnvModel_SST").css('display', 'block');
+                    break;
+                default:
+                    null;
+            }
             init_ddModel();
-            // draw();
+            draw({init:true});
         })
 
     init_ddModel();
@@ -172,21 +185,30 @@ function init_ddModel() {
             init_ddDate();
             init_ddTime();
             init_ddDepth();
-            draw();
+            draw({init:true});
         })
 
     lastModelDateTime = field.dateTimes[findClosestDateTime(lastModelDateTime, field.dateTimes).index];
     availDates = _.uniq(fields.filter(d => { return d.field == field.field && d.model == field.model })[0].dateTimes.map(d => d.format("MMM D"))).map((d, i) => { return { name: d, value: i } });
-    availTimes = _.uniq(fields.filter(d => { return d.field == field.field && d.model == field.model })[0].dateTimes.map(d => d.format("HH"))).sort().map((d, i) => { return { name: d + ":00", value: i } });
 
-    init_ddDate();
-    init_ddTime();
-    init_ddDepth();
+    switch (field.field) {
+        case "UV":
+            availTimes = _.uniq(fields.filter(d => { return d.field == field.field && d.model == field.model })[0].dateTimes.map(d => d.format("HH"))).sort().map((d, i) => { return { name: d + ":00", value: i } });
+            init_ddDate();
+            init_ddTime();
+            init_ddDepth();
+            break;
+        case "SST":
+            init_ddDate();
+            break;
+        default:
+            null
+    }
 }
 
 function init_ddDate() {
     field.dateTime = lastModelDateTime;
-
+    console.log(lastModelDateTime)
     $('#ddDate')
         .dropdown({
             values: availDates,
@@ -196,7 +218,7 @@ function init_ddDate() {
             lastModelDateTime = moment(lastModelDateTime).set("month", availDates[i].name.split(" ")[0])
             lastModelDateTime = moment(lastModelDateTime).set("date", parseInt(availDates[i].name.split(" ")[1]))
             field.dateTime = lastModelDateTime;
-            draw();
+            draw({init:true});
         })
 }
 
@@ -211,7 +233,7 @@ function init_ddTime() {
         .dropdown('setting', 'onChange', (i) => {
             lastModelDateTime = moment(lastModelDateTime).set("hour", availTimes[i].name.split(":")[0])
             field.dateTime = lastModelDateTime;
-            draw();
+            draw({init:true});
         })
 }
 
@@ -224,7 +246,7 @@ function init_ddDepth() {
         .dropdown('set selected', field.depth.text)
         .dropdown('setting', 'onChange', (i) => {
             field.depth = field.depths[i];
-            draw();
+            draw({init:true});
         })
 }
 
@@ -295,6 +317,13 @@ $(".checkbox")
             if (isAnimation) { $("#cnvModel_gl").css('display', 'block') }
             else { $("#cnvModel_2d").css('display', 'block') };
             // setTimeout(()=>{draw()},5000)
-            draw();
+            draw({init:false});
         }
     });
+
+
+
+///////////////////////////////////////////----------------\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+//----------------------------------------- CONTOUR COLORS -----------------------------------------\\
+var palette = [[255, 255, 255], [255, 255, 255], [0, 102, 204], [0, 204, 255], [0, 255, 255], [0, 255, 0], [255, 255, 0], [255, 0, 0], [255, 204, 204]];
+var paletteStops = [0, 0.5404, 0.5405, 5.4054, 5.6757, 32.4324, 59.4595, 86.4865, 100];

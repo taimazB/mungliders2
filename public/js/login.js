@@ -25,13 +25,13 @@ $(".buttonLogin").on("click", login);
 
 
 
-$.ajax({
-    url: "/setPassword",
-    type: "POST",
-    success: function (data, textStatus, jqXHR) {
-        window.location.replace('/map');
-    },
-    error: function (jqXHR, textStatus, errorThrown) {
-        console.log(errorThrown);
-    }
-})
+// $.ajax({
+//     url: "/setPassword",
+//     type: "POST",
+//     success: function (data, textStatus, jqXHR) {
+//         window.location.replace('/map');
+//     },
+//     error: function (jqXHR, textStatus, errorThrown) {
+//         console.log(errorThrown);
+//     }
+// })
