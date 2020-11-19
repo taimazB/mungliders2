@@ -1,10 +1,12 @@
+var initLoad = true;
 var field, fields;
 var wind;
 var speed = [], direction = [];
 var pngWidth, pngHeight;
 var lastModelDate;
 var imgGlobal = new Image();
-var cnvModel_gl, cnvModel_2d, cnvModel_sst;
+var cnvGL, cnvArrow, cnvSST;
+var ctxGL, ctxArrow, ctxSST;  // --- Context of each canvas
 const cnvTmp = document.createElement("canvas");
 var ctxTmp = cnvTmp.getContext("2d");
 var R = 6378137;
@@ -19,3 +21,5 @@ var vMin = -3., vMax = 3.;
 var maxColors = 50, colorPalette;
 
 var palette, paletteStops;
+
+var reqAnimID;

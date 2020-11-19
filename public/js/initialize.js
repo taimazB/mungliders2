@@ -208,7 +208,6 @@ function init_ddModel() {
 
 function init_ddDate() {
     field.dateTime = lastModelDateTime;
-    console.log(lastModelDateTime)
     $('#ddDate')
         .dropdown({
             values: availDates,
@@ -327,3 +326,13 @@ $(".checkbox")
 //----------------------------------------- CONTOUR COLORS -----------------------------------------\\
 var palette = [[255, 255, 255], [255, 255, 255], [0, 102, 204], [0, 204, 255], [0, 255, 255], [0, 255, 0], [255, 255, 0], [255, 0, 0], [255, 204, 204]];
 var paletteStops = [0, 0.5404, 0.5405, 5.4054, 5.6757, 32.4324, 59.4595, 86.4865, 100];
+
+
+
+cnvGL = document.getElementById('cnvModel_gl');
+cnvArrow = d3.select('#cnvModel_2d').node();
+cnvSST = d3.select('#cnvModel_SST').node();
+
+ctxGL = cnvGL.getContext('webgl', { antialiasing: false });
+ctxArrow = cnvArrow.getContext('2d');
+ctxSST = cnvSST.getContext('2d');

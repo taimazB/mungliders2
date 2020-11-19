@@ -2,13 +2,12 @@ function sstInit() {
     // --- Disable unwanted dropdowns
     $("#ddTime").addClass("disabled");
     $("#ddDepth").addClass("disabled");
-    
+
 
     var bnds = map.getBounds();
     // bnds = { _ne: { lat: 30, lng: -50 }, _sw: { lat: 20, lng: -40 } }
 
     imgGlobal.src = `models/${field.model}/${field.field}/jpg/${field.model}_${field.field}_${field.dateTime.format("YYYYMMDD")}.jpg`;
-    console.log(imgGlobal.src)
     imgGlobal.onload = () => {
         var top = imgGlobal.naturalHeight * (1 - (lat2y(bnds._ne.lat) + lat2y(80)) / (2 * lat2y(80)));
         var bottom = imgGlobal.naturalHeight * (1 - (lat2y(bnds._sw.lat) + lat2y(80)) / (2 * lat2y(80)));
@@ -35,8 +34,6 @@ function sstInit() {
 
 
         // --- Draw part of the first image onto the new canvas
-        cnvSST = document.getElementById("cnvModel_SST");
-        ctxSST = cnvSST.getContext("2d");
         ctxSST.putImageData(imageData, 0, 0)
     }
 
@@ -79,8 +76,6 @@ function sstMove() {
     }
 
     // --- Draw part of the first image onto the new canvas
-    cnvSST = document.getElementById("cnvModel_SST");
-    ctxSST = cnvSST.getContext("2d");
     ctxSST.putImageData(imageData, 0, 0)
 }
 

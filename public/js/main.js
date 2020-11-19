@@ -24,43 +24,19 @@ map.on("load", () => {
         `<div id="txtDepth" data-placeholder="Click anywhere for depth" style="width: 100%;color: azure;text-align-last: center;font-size: large;padding-bottom: 10px;"></div>`
     )
 
-    // using var to work around a WebKit bug
-    cnvModel_gl = document.getElementById('cnvModel_gl');
+    map
+        .on("move", clean)
 
-    // const pxRatio = Math.max(Math.floor(window.devicePixelRatio) || 1, 2);
-    const gl = cnvModel_gl.getContext('webgl', { antialiasing: false });
+    map
+        .on("moveend", draw)
 
-    wind = window.wind = new WindGL(gl);
-    wind.numParticles = 50000;
-
-    var fade = 0.925;
-    function frame() {
-        if (wind.windData) {
-            wind.draw(fade);
-        }
-        requestAnimationFrame(frame);
-    }
-    frame();
-
-
-    // function updateRetina() {
-    //     const ratio = meta['retina resolution'] ? pxRatio : 1;
-    //     cnvModel_gl.width = cnvModel_gl.clientWidth * ratio;
-    //     cnvModel_gl.height = cnvModel_gl.clientHeight * ratio;
-    //     wind.resize();
-    // }
-
-
-    map.on("render", () => {
-        draw({ init: false });
-    });
+    // --- Initial load
+    draw({ init: false });
 });
 
 
-
-
-
 function draw(init) {
+    init == null ? init = { init: false } : init = init;
     bnds = map.getBounds();
     // bnds = { _ne: { lat: 50, lng: -50 }, _sw: { lat: 40, lng: -40 } }
 
@@ -76,5 +52,9 @@ function draw(init) {
     }
 }
 
-// --- Initial load
-draw();
+
+function clean() {
+        ctxGL.clear(ctxGL.DEPTH_BUFFER_BIT | ctxGL.COLOR_BUFFER_BIT | ctxGL.STENCIL_BUFFER_BIT)
+        cnvModel_2d.getContext('2d').clearRect(0, 0, mapWidth, mapHeight);
+        cnvSST.getContext('2d').clearRect(0, 0, mapWidth, mapHeight);
+}

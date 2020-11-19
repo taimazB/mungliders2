@@ -2,7 +2,7 @@ function currentInit() {
     // --- Enable dropdowns
     $("#ddTime").removeClass("disabled");
     $("#ddDepth").removeClass("disabled");
-    
+
 
     imgGlobal.src = `models/${field.model}/${field.field}/jpg/${field.model}_${field.field}_${field.dateTime.format("YYYYMMDD_HH")}_${field.depth.name}.jpg`;
     imgGlobal.onload = () => {
@@ -24,10 +24,10 @@ function currentInit() {
         if (isAnimation) {
             var imgCropped = new Image();
             imgCropped.src = cnvTmp.toDataURL();
-            animateArrows(imgCropped); console.log('anim')
+            animateArrows(imgCropped);
         }
         else {
-            staticArrows(ctxTmp); console.log('static')
+            staticArrows(ctxTmp);
         }
     }
 
@@ -55,6 +55,29 @@ function currentInit() {
 
 
 function animateArrows(img) {
+    wind = window.wind = new WindGL(ctxGL);
+    wind.numParticles = 50000;
+
+    var fade = 0.98;
+    function frame() {
+        if (wind.windData) {
+            wind.draw(fade);
+        }
+        reqAnimID = requestAnimationFrame(frame);
+    }
+
+    initLoad ? frame() : null;
+    initLoad = false;
+
+
+    // function updateRetina() {
+    //     const ratio = meta['retina resolution'] ? pxRatio : 1;
+    //     cnvModel_gl.width = cnvModel_gl.clientWidth * ratio;
+    //     cnvModel_gl.height = cnvModel_gl.clientHeight * ratio;
+    //     wind.resize();
+    // }
+
+
     getJSON(`models/${field.model}/${field.field}/json/${field.model}_${field.field}.json`, function (windData) {
         windData.image = img;
         wind.setWind(windData);
@@ -77,17 +100,28 @@ function animateArrows(img) {
 }
 
 
-function staticArrows(ctx2dData) {
-    cnvModel_2d = d3.select('#cnvModel_2d').node();
-    var ctx2d = cnvModel_2d.getContext('2d');
+function staticArrows(ctxArrowData) {
     var customBase = document.createElement('custom');
     var custom = d3.select(customBase); // This is your SVG replacement and the parent of all other elements
 
     var data = [];
-    var spacing = 20;
+
+    // --- Different spacings for different zoom levels
+    var spacing;
+    switch (map.getZoom()) {
+        case 3: spacing = 5; break;
+        case 4: spacing = 7; break;
+        case 5: spacing = 9; break;
+        case 6: spacing = 12; break;
+        case 7: spacing = 15; break;
+        case 8: spacing = 19; break;
+        case 9: spacing = 23; break;
+        default: spacing = 10;
+    }
+
     for (var i = 0; i <= mapWidth; i = i + spacing) {
         for (var j = 0; j <= mapHeight; j = j + spacing) {
-            [u, v] = ctx2dData.getImageData(i, j, 1, 1).data;
+            [u, v] = ctxArrowData.getImageData(i, j, 1, 1).data;
             u = (u / 255) * (uMax - uMin) + uMin;
             v = -((v / 255) * (vMax - vMin) + vMin);
 
@@ -130,10 +164,10 @@ function staticArrows(ctx2dData) {
 
     function draw() {
         // --- Clear the canvas.
-        ctx2d.clearRect(0, 0, mapWidth, mapHeight);
+        ctxArrow.clearRect(0, 0, mapWidth, mapHeight);
 
         var elements = custom.selectAll('custom.path');
-        var fact = 10;
+        var fact = 3;
         elements.each(function (d, i) {
             var node = d3.select(this);
             var x = parseFloat(node.attr('x')),
@@ -143,17 +177,17 @@ function staticArrows(ctx2dData) {
                 speed = parseFloat(node.attr('speed')),
                 direction = parseFloat(node.attr('direction'));
 
-            ctx2d.beginPath();
+            ctxArrow.beginPath();
 
-            ctx2d.moveTo(x, y);
-            ctx2d.lineTo(x + fact * speed * Math.cos(direction + 0.75 * Math.PI), y + fact * speed * Math.sin(direction + 0.75 * Math.PI));
-            ctx2d.lineTo(x + fact * u, y + fact * v);
-            ctx2d.lineTo(x + fact * speed * Math.cos(direction - 0.75 * Math.PI), y + fact * speed * Math.sin(direction - 0.75 * Math.PI));
-            ctx2d.lineTo(x, y);
+            ctxArrow.moveTo(x, y);
+            ctxArrow.lineTo(x + fact * speed * Math.cos(direction + 8 / 12 * Math.PI), y + fact * speed * Math.sin(direction + 8 / 12 * Math.PI));
+            ctxArrow.lineTo(x + 3 * fact * u, y + 3 * fact * v);
+            ctxArrow.lineTo(x + fact * speed * Math.cos(direction - 8 / 12 * Math.PI), y + fact * speed * Math.sin(direction - 8 / 12 * Math.PI));
+            ctxArrow.lineTo(x, y);
 
-            ctx2d.fillStyle = node.attr('color');
-            ctx2d.fill();
-            ctx2d.closePath();
+            ctxArrow.fillStyle = node.attr('color');
+            ctxArrow.fill();
+            ctxArrow.closePath();
         });
     }
 
