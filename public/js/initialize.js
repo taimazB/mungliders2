@@ -123,7 +123,7 @@ fields = [
 ]
 
 var availDates, iDate, availTimes, iTime;
-field = fields[0];
+field = fields[1];
 
 
 ///////////////////////////////////////////-------------\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
@@ -175,7 +175,7 @@ function init_ddModel() {
         .dropdown({
             values: fields.filter(d => d.field == field.field).map((d, i) => { return { name: d.model, value: i } }),
         })
-        .dropdown('set selected', '0')
+        .dropdown('set selected', '1')
         .dropdown('setting', 'onChange', (i, selectedModel) => {
             $("#activeModel").html(selectedModel);
             field = fields.filter(d => d.field == field.field && d.model == selectedModel)[0];
