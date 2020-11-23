@@ -121,13 +121,13 @@ app.get("/map", function (req, res) {
 // });
 
 
-app.post("/getAvailTimes", function (req, res) {
+app.post("/getAvailDateTimes", function (req, res) {
   var model = req.body.model,
     field = req.body.field,
-    i = req.body.i;
+    i = parseInt(req.body.i);
 
-  res.send([...new Set(fs.readdirSync(`public/models/${model}/${field}/jpg/`).map(d => d.split("_").slice(2, 2+i).join("_")))])
-  res.end();
+  res.send([...new Set(fs.readdirSync(`public/models/${model}/${field}/jpg/`).map(d => d.replace(".jpg","").split("_").slice(2, 2+i).join("_")))])
+  // res.end();
 });
 
 

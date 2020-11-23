@@ -26,8 +26,6 @@ map.on("load", () => {
 
     map
         .on("move", clean)
-
-    map
         .on("moveend", draw)
 
     // --- Initial load
@@ -41,7 +39,7 @@ function draw(init) {
     // bnds = { _ne: { lat: 50, lng: -50 }, _sw: { lat: 40, lng: -40 } }
 
     switch (field.field) {
-        case "UV":
+        case "Currents":
             currentInit();
             break;
         case "SST":
@@ -54,7 +52,7 @@ function draw(init) {
 
 
 function clean() {
-        ctxGL.clear(ctxGL.DEPTH_BUFFER_BIT | ctxGL.COLOR_BUFFER_BIT | ctxGL.STENCIL_BUFFER_BIT)
-        cnvModel_2d.getContext('2d').clearRect(0, 0, mapWidth, mapHeight);
-        cnvSST.getContext('2d').clearRect(0, 0, mapWidth, mapHeight);
+    ctxGL.clear(ctxGL.DEPTH_BUFFER_BIT | ctxGL.COLOR_BUFFER_BIT | ctxGL.STENCIL_BUFFER_BIT)
+    cnvArrows.getContext('2d').clearRect(0, 0, mapWidth, mapHeight);
+    cnvSST.getContext('2d').clearRect(0, 0, mapWidth, mapHeight);
 }

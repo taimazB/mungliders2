@@ -1,10 +1,10 @@
 function currentInit() {
     // --- Enable dropdowns
-    $("#ddTime").removeClass("disabled");
-    $("#ddDepth").removeClass("disabled");
+    // $("#ddTime").removeClass("disabled");
+    // $("#ddDepth").removeClass("disabled");
 
 
-    imgGlobal.src = `models/${field.model}/${field.field}/jpg/${field.model}_${field.field}_${field.dateTime.format("YYYYMMDD_HH")}_${field.depth.name}.jpg`;
+    imgGlobal.src = `models/${field.model}/${field.field}/jpg/${field.model}_${field.field}_${lastModelDateTime.format("YYYYMMDD_HH")}_${field.depth.name}.jpg`;
     imgGlobal.onload = () => {
         var top = imgGlobal.naturalHeight * (1 - (lat2y(bnds._ne.lat) + lat2y(80)) / (2 * lat2y(80)));
         var bottom = imgGlobal.naturalHeight * (1 - (lat2y(bnds._sw.lat) + lat2y(80)) / (2 * lat2y(80)));
@@ -22,11 +22,13 @@ function currentInit() {
         ctxTmp.drawImage(imgGlobal, left, top, imgWidth, imgHeight, 0, 0, cnvTmp.width, cnvTmp.height);
 
         if (isAnimation) {
+            $("#cnvAnim").css('display', 'block');
             var imgCropped = new Image();
             imgCropped.src = cnvTmp.toDataURL();
             animateArrows(imgCropped);
         }
         else {
+            $("#cnvArrows").css('display', 'block');
             staticArrows(ctxTmp);
         }
     }
@@ -72,8 +74,8 @@ function animateArrows(img) {
 
     // function updateRetina() {
     //     const ratio = meta['retina resolution'] ? pxRatio : 1;
-    //     cnvModel_gl.width = cnvModel_gl.clientWidth * ratio;
-    //     cnvModel_gl.height = cnvModel_gl.clientHeight * ratio;
+    //     cnvAnim.width = cnvAnim.clientWidth * ratio;
+    //     cnvAnim.height = cnvAnim.clientHeight * ratio;
     //     wind.resize();
     // }
 

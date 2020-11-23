@@ -3,7 +3,7 @@ var field, fields;
 var wind;
 var speed = [], direction = [];
 var pngWidth, pngHeight;
-var lastModelDate;
+var lastModelDateTime;
 var imgGlobal = new Image();
 var cnvGL, cnvArrow, cnvSST;
 var ctxGL, ctxArrow, ctxSST;  // --- Context of each canvas
@@ -13,7 +13,7 @@ var R = 6378137;
 var mapWidth, mapHeight;
 var bnds;
 
-// --- UV
+// --- Currents
 var isAnimation = true;
 var uMin = -3., uMax = 3.;
 var vMin = -3., vMax = 3.;

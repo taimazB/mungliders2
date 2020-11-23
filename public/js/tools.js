@@ -30,3 +30,14 @@ function num2latlon(num, latlon) {
     }
     return result;
 }
+
+
+
+function btnsActivate() {
+    $(".ui.button").on('click', function () {
+        $(this)
+            .addClass('active')
+            .siblings()
+            .removeClass('active')
+    })
+}

@@ -1,13 +1,14 @@
 function sstInit() {
+    $("#cnvSST").css('display', 'block');
     // --- Disable unwanted dropdowns
-    $("#ddTime").addClass("disabled");
-    $("#ddDepth").addClass("disabled");
+    // $("#ddTime").addClass("disabled");
+    // $("#ddDepth").addClass("disabled");
 
 
     var bnds = map.getBounds();
     // bnds = { _ne: { lat: 30, lng: -50 }, _sw: { lat: 20, lng: -40 } }
 
-    imgGlobal.src = `models/${field.model}/${field.field}/jpg/${field.model}_${field.field}_${field.dateTime.format("YYYYMMDD")}.jpg`;
+    imgGlobal.src = `models/${field.model}/${field.field}/jpg/${field.model}_${field.field}_${lastModelDateTime.format("YYYYMMDD")}.jpg`;
     imgGlobal.onload = () => {
         var top = imgGlobal.naturalHeight * (1 - (lat2y(bnds._ne.lat) + lat2y(80)) / (2 * lat2y(80)));
         var bottom = imgGlobal.naturalHeight * (1 - (lat2y(bnds._sw.lat) + lat2y(80)) / (2 * lat2y(80)));

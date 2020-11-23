@@ -44,6 +44,15 @@
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
         integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous" />
 
+    <!-- Bootstrap Datepicker -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/js/bootstrap-datepicker.min.js"
+        integrity="sha512-T/tUfKSV1bihCnd+MxKD0Hm1uBBroVYBOYSk1knyvQ9VyZJpc/ALb4P0r6ubwVPSGB2GvjeoMAJJImBG12TiaQ=="
+        crossorigin="anonymous"></script>
+    <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/css/bootstrap-datepicker.min.css"
+        integrity="sha512-mSYUmp1HYZDFaVKK//63EcZq4iFWFjxSL+Z3T/aCt4IO9Cejm03q3NKKYN6pFQzY0SBOr8h+eCIAZHPXcpZaNw=="
+        crossorigin="anonymous" />
+
     <!-- Bootstrap Toggle -->
     <script src="https://gitcdn.github.io/bootstrap-toggle/2.2.2/js/bootstrap-toggle.min.js"></script>
     <link href="https://gitcdn.github.io/bootstrap-toggle/2.2.2/css/bootstrap-toggle.min.css" rel="stylesheet">
@@ -87,7 +96,7 @@
 <body>
     <!-- <div class="ui sidebar inverted vertical visible menu" style="width: 22.5%;"> -->
     <div class="m-0 p-0 inverted" style="width: 22.5%; height: 100%; position:absolute; left: 0;">
-        <div class="ui segment inverted p-0">
+        <div class="ui segment inverted p-0 m-0">
             <div class="ui grid inverted m-0">
 
                 <!-- TAB HEADERS -->
@@ -116,93 +125,56 @@
                         <!-- MODELS TAB -->
                         <div id="tabModels" class="ui segment inverted tabContent" style="display: block;">
                             <div class="ui grid inverted">
-                                <!-- <h2 class="ui header inverted" style="width: 100%;">Selected Model</h2> -->
-
                                 <!-- FIELD -->
-                                <div class="eight wide column">Field:</div>
-                                <div class="eight wide column px-0">
-                                    <div id="ddField" class="ui selection dropdown"
-                                        style="min-width:-webkit-fill-available;">
-                                        <input type="hidden">
-                                        <i class="dropdown icon"></i>
-                                        <div class="default text">Field</div>
-                                    </div>
+                                <div id="btnsField" class="sixteen wide column ui buttons" style="display: inherit;">
                                 </div>
 
                                 <!-- MODEL -->
-                                <div class="eight wide column">Model:</div>
-                                <div class="eight wide column px-0">
-                                    <div id="ddModel" class="ui selection dropdown"
-                                        style="min-width:-webkit-fill-available;">
-                                        <input type="hidden">
-                                        <i class="dropdown icon"></i>
-                                        <div class="default text"></div>
-                                    </div>
+                                <div id="btnsModel" class="sixteen wide column ui buttons" style="display: inherit;">
                                 </div>
                             </div>
-                            <div class="ui divider"></div>
-                            <div class="ui grid">
-                                <!-- <h2 class="ui header" style="width: 100%;">Data Info</h2> -->
 
-                                <!-- LATEST RUN -->
-                                <!-- <div class="eight wide column">Last Run:</div>
-                            <div class="eight wide column px-0">6 Oct, 2020 - 18:30</div> -->
+                            <div class="ui divider"></div>
+
+                            <div class="ui grid">
+                                <!-- DATE -->
+                                <div class="eight wide column" style="text-align: center;">
+                                    <i id="dayUp" class="fas fa-angle-up clickable"></i>
+                                    <input class="datepicker form-control" style="text-align: center;">
+                                    <i id="dayDown" class="fas fa-angle-down clickable"></i>
+                                </div>
 
                                 <!-- TIME -->
-                                <div class="eight wide column">Forecast:</div>
-                                <div class="eight wide column">
-                                    <div class="ui grid">
-                                        <div class="two wide column px-0" style="text-align: center;">
-                                            <i id="dayDown" class="fas fa-angle-left clickable"></i>
-                                        </div>
-                                        <div class="twelve wide column px-0">
-                                            <div id="ddDate" class="ui selection dropdown"
-                                                style="min-width:-webkit-fill-available;">
-                                                <input type="hidden">
-                                                <i class="dropdown icon"></i>
-                                                <div class="default text">Date</div>
-                                            </div>
-                                        </div>
-                                        <div class="two wide column px-0" style="text-align: center;">
-                                            <i id="dayUp" class="fas fa-angle-right clickable"></i>
-                                        </div>
-
-                                        <div class="two wide column px-0" style="text-align: center;">
-                                            <i id="timeDown" class="fas fa-angle-left clickable"></i>
-                                        </div>
-                                        <div class="twelve wide column px-0">
-                                            <div id="ddTime" class="ui selection dropdown"
-                                                style="min-width:-webkit-fill-available;">
-                                                <input type="hidden">
-                                                <i class="dropdown icon"></i>
-                                                <div class="default text">Hour</div>
-                                            </div>
-                                        </div>
-                                        <div class="two wide column px-0" style="text-align: center;">
-                                            <i id="timeUp" class="fas fa-angle-right clickable"></i>
-                                        </div>
+                                <div id="btnsTime" class="eight wide column ui buttons tiny py-0"
+                                    style="display:inherit; text-align: center;">
+                                    <div class="ui grid" style="margin: 0;">
+                                        <button id="hr00" class="five wide column ui button p-0 btnTime">00</button>
+                                        <button id="hr03" class="five wide column ui button p-0 btnTime">03</button>
+                                        <button id="hr06" class="five wide column ui button p-0 btnTime">06</button>
+                                        <button id="hr09" class="five wide column ui button p-0 btnTime">09</button>
+                                        <button id="hr12" class="five wide column ui button p-0 btnTime">12</button>
+                                        <button id="hr15" class="five wide column ui button p-0 btnTime">15</button>
+                                        <button id="hr18" class="five wide column ui button p-0 btnTime">18</button>
+                                        <button id="hr21" class="five wide column ui button p-0 btnTime">21</button>
                                     </div>
                                 </div>
+                            </div>
 
 
-                                <!-- DEPTH -->
-                                <div class="eight wide column">Depth:</div>
-                                <div class="eight wide column px-0">
-                                    <div id="ddDepth" class="ui selection dropdown"
-                                        style="min-width:-webkit-fill-available;">
-                                        <input type="hidden">
-                                        <i class="dropdown icon"></i>
-                                        <div class="default text">Depth (m)</div>
-                                    </div>
+                            <!-- DEPTH -->
+                            <div class="eight wide column">Depth:</div>
+                            <div class="eight wide column px-0">
+                                <div id="ddDepth" class="ui selection dropdown"
+                                    style="min-width:-webkit-fill-available;">
+                                    <input type="hidden">
+                                    <i class="dropdown icon"></i>
+                                    <div class="default text">Depth (m)</div>
                                 </div>
-                                <!-- <div class="one wide inverted column">m</div> -->
                             </div>
-                            <div class="ui divider"></div>
-                            <div class="ui grid">
-                                <!-- <h2 class="ui header" style="width: 100%;">Pointer info</h2> -->
-
-                            </div>
+                            <!-- <div class="one wide inverted column">m</div> -->
                         </div>
+                        <div class="ui divider"></div>
+                        <div class="ui grid"> </div>
 
                         <!-- PATH PLANNING TAB -->
                         <div id="tabPathPlanning" class="ui segment inverted tabContent" style="display: none;">
@@ -552,9 +524,9 @@
 
     <!-- <div class="pusher" style="width: 77.5%;"> -->
     <div style="width: 77.5%; height: 100%;position: absolute; right: 0">
-        <canvas id="cnvModel_SST" class="canvas" style="display: none;"></canvas>
-        <canvas id="cnvModel_gl" class="canvas" style="background-color: currentColor; display: block;"></canvas>
-        <canvas id="cnvModel_2d" class="canvas" style="background-color: currentColor; display: none;"></canvas>
+        <canvas id="cnvSST" class="canvas" style="display: none;"></canvas>
+        <canvas id="cnvAnim" class="canvas" style="background-color: currentColor; display: block;"></canvas>
+        <canvas id="cnvArrows" class="canvas" style="background-color: currentColor; display: none;"></canvas>
         <canvas id="cnvPathPlanning" class="canvas"></canvas>
         <div id="map" style="position: absolute; width: 100%; height: 100vh;"></div>
 

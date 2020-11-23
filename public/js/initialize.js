@@ -32,7 +32,7 @@ $(".tabButtons").on("click", (e) => {
             $("#tabSettings").css("display", "block");
             break;
         default:
-        // $("#tabModels").css("display", "block");
+            null;
     }
 })
 
@@ -45,10 +45,10 @@ $('.ui .accordion')
     ;
 
 
-function getAvailTimes(model, field, i) {
+function getAvailDateTimes(model, field, i) {
     var results;
     $.ajax({
-        url: "/getAvailTimes",
+        url: "/getAvailDateTimes",
         type: "POST",
         async: false,
         data: { model: model, field: field, i: i },
@@ -59,6 +59,7 @@ function getAvailTimes(model, field, i) {
             console.log(errorThrown);
         }
     });
+
     return results;
 }
 
@@ -67,33 +68,13 @@ function getAvailTimes(model, field, i) {
 $('.ui.sidebar')
     .sidebar('setting', 'dimPage', false)
     .sidebar('setting', 'closable', false)
-// .sidebar('toggle')
 
 
 ///////////////////////////////////////////-----------------\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
 //----------------------------------------- FIELDS & MODELS -----------------------------------------\\
 fields = [
     {
-        field: "UV",
-        model: "RIOPS",
-        depths: [
-            { name: "0000-0010", text: "Surface (0-10 m)" },
-            { name: "0010-0050", text: "10 - 50 m" },
-            { name: "0050-0100", text: "50 - 100 m" },
-            { name: "0100-0200", text: "100 - 200 m" },
-            { name: "0200-0500", text: "200 - 500 m" },
-            { name: "0500-1000", text: "500 m - 1 km" },
-            { name: "1000-1500", text: "1 - 1.5 km" },
-            { name: "1500-2000", text: "1.5 - 2 km" },
-            { name: "2000-20000", text: "Bottom (below 2 km)" }
-        ],
-        depth: null,
-        latestRun: null,
-        dateTimes: getAvailTimes("RIOPS", "UV", 2).map(d => moment.utc(d, "YYYYMMDD_HH")),
-        dateTime: null
-    },
-    {
-        field: "UV",
+        field: "Currents",
         model: "HYCOM",
         depths: [
             { name: "0000-0010", text: "Surface (0-10 m)" },
@@ -108,22 +89,39 @@ fields = [
         ],
         depth: null,
         latestRun: null,
-        dateTimes: getAvailTimes("HYCOM", "UV", 2).map(d => moment.utc(d, "YYYYMMDD_HH")),
+        dateTimes: getAvailDateTimes("HYCOM", "Currents", 2).map(d => moment.utc(d, "YYYYMMDD_HH")),
         dateTime: null
-    },
-    {
+    }, {
+        field: "Currents",
+        model: "RIOPS",
+        depths: [
+            { name: "0000-0010", text: "Surface (0-10 m)" },
+            { name: "0010-0050", text: "10 - 50 m" },
+            { name: "0050-0100", text: "50 - 100 m" },
+            { name: "0100-0200", text: "100 - 200 m" },
+            { name: "0200-0500", text: "200 - 500 m" },
+            { name: "0500-1000", text: "500 m - 1 km" },
+            { name: "1000-1500", text: "1 - 1.5 km" },
+            { name: "1500-2000", text: "1.5 - 2 km" },
+            { name: "2000-20000", text: "Bottom (below 2 km)" }
+        ],
+        depth: null,
+        latestRun: null,
+        dateTimes: getAvailDateTimes("RIOPS", "Currents", 2).map(d => moment.utc(d, "YYYYMMDD_HH")),
+        dateTime: null
+    }, {
         field: "SST",
         model: "JPLMUR41",
         depths: null,
         depth: null,
         latestRun: null,
-        dateTimes: getAvailTimes("JPLMUR41", "SST", 1).map(d => moment.utc(d, "YYYYMMDD")),
+        dateTimes: getAvailDateTimes("JPLMUR41", "SST", 1).map(d => moment.utc(d, "YYYYMMDD")),
         dateTime: null
     }
 ]
 
 var availDates, iDate, availTimes, iTime;
-field = fields[1];
+field = fields[0];
 
 
 ///////////////////////////////////////////-------------\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
@@ -133,164 +131,168 @@ function findClosestDateTime(time, dateTimes) {
     return { index: index, dateTime: dateTimes[index] };
 }
 
-lastModelDateTime = findClosestDateTime(moment().utc(), field.dateTimes).dateTime;
+lastModelDateTime = findClosestDateTime(moment.utc(), field.dateTimes).dateTime;
 
-$("#dateTime").html(moment().utc().format("MMM D, HH:mm") + " UTC");
+
+$("#dateTime").html(moment.utc().format("MMM D, HH:mm") + " UTC");
 setInterval(() => {
     $("#dateTime").html(moment().utc().format("MMM D, HH:mm") + " UTC");
 }, 60000);
 
 
-///////////////////////////////////////////-----------\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
-//----------------------------------------- DROPDOWNS -----------------------------------------\\
-function init_ddField() {
-    $('#ddField').dropdown({
-        values: [...new Set(fields.map(d => d.field))].map((d, i) => { return { name: d, value: i } }),
-    })
-        .dropdown('set selected', '0')
-        .dropdown('setting', 'onChange', (i, selectedField) => {
-            field = fields.filter(d => d.field == selectedField)[0];
-            switch (field.field) {
-                case "UV":
-                    $('.canvas').css('display', 'none');
-                    if (isAnimation) { $("#cnvModel_gl").css('display', 'block') }
-                    else { $("#cnvModel_2d").css('display', 'block') };
-                    break;
-                case "SST":
-                    $('.canvas').css('display', 'none');
-                    $("#cnvModel_SST").css('display', 'block');
-                    break;
-                default:
-                    null;
-            }
-            init_ddModel();
-            draw({init:true});
-        })
+///////////////////////////////////////////---------------\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+//----------------------------------------- BUTTON GROUPS -----------------------------------------\\
+function init_btnFields() {
+    $("#btnsField").empty();
+    [...new Set(fields.map(d => d.field))].forEach((e, i) => {
+        $("#btnsField").append(`<button id="btn${e}" class="ui button">${e}</button>`);
+        $(`#btn${e}`).on('click', function () {
+            // --- Hide all canvas's to display the appropriate one later
+            $('.canvas').css('display', 'none');
 
-    init_ddModel();
+            init_btnModels(e);
+        })
+    });
+
+    btnsActivate();
+
+    // --- Initiale load - choose the first field
+    $(`#btn${[...new Set(fields.map(d => d.field))][0]}`).click();
 }
 
-function init_ddModel() {
-    $('#ddModel')
-        .dropdown({
-            values: fields.filter(d => d.field == field.field).map((d, i) => { return { name: d.model, value: i } }),
-        })
-        .dropdown('set selected', '1')
-        .dropdown('setting', 'onChange', (i, selectedModel) => {
-            $("#activeModel").html(selectedModel);
-            field = fields.filter(d => d.field == field.field && d.model == selectedModel)[0];
-            lastModelDateTime = field.dateTimes[findClosestDateTime(lastModelDateTime, field.dateTimes).index];
-            availDates = _.uniq(fields.filter(d => { return d.field == field.field && d.model == field.model })[0].dateTimes.map(d => d.format("MMM D"))).map((d, i) => { return { name: d, value: i } });
-            availTimes = _.uniq(fields.filter(d => { return d.field == field.field && d.model == field.model })[0].dateTimes.map(d => d.format("HH"))).sort().map((d, i) => { return { name: d + ":00", value: i } });
-            init_ddDate();
-            init_ddTime();
-            init_ddDepth();
-            draw({init:true});
-        })
 
-    lastModelDateTime = field.dateTimes[findClosestDateTime(lastModelDateTime, field.dateTimes).index];
-    availDates = _.uniq(fields.filter(d => { return d.field == field.field && d.model == field.model })[0].dateTimes.map(d => d.format("MMM D"))).map((d, i) => { return { name: d, value: i } });
+function init_btnModels(variable) {
+    $("#btnsModel").empty();
+    fields.filter(d => d.field == variable).forEach((e, i) => {
+        $("#btnsModel").append(`<button id="btn${e.model}" class="ui button">${e.model}</button>`);
 
-    switch (field.field) {
-        case "UV":
-            availTimes = _.uniq(fields.filter(d => { return d.field == field.field && d.model == field.model })[0].dateTimes.map(d => d.format("HH"))).sort().map((d, i) => { return { name: d + ":00", value: i } });
-            init_ddDate();
-            init_ddTime();
-            init_ddDepth();
-            break;
-        case "SST":
-            init_ddDate();
-            break;
-        default:
-            null
+        $(`#btn${e.model}`).on('click', function () {
+            field = fields.filter(d => d.field == variable && d.model == e.model)[0];
+            init_ddDepths();
+            init_dates();
+        })
+    });
+
+    btnsActivate();
+
+    // --- Choose the first model
+    $(`#btn${fields.filter(d => d.field == variable)[0].model}`).click();
+}
+
+
+function init_dates() {
+    console.log(field.dateTimes)
+    if (lastModelDateTime < field.dateTimes[0]) { console.log('belowMin'); lastModelDateTime = field.dateTimes[0] };
+    if (lastModelDateTime > field.dateTimes[field.dateTimes.length - 1]) { console.log('aboveMax'); lastModelDateTime = field.dateTimes[field.dateTimes.length - 1] };
+
+    // --- Initialize datepicker
+    // --- All this below because of the stupid local/UTC conflict!
+    var startYear = field.dateTimes[0].toDate().getUTCFullYear(),
+        startMonth = field.dateTimes[0].toDate().getUTCMonth(),
+        startDay = field.dateTimes[0].toDate().getUTCDate();
+    var endYear = field.dateTimes[field.dateTimes.length - 1].toDate().getUTCFullYear(),
+        endMonth = field.dateTimes[field.dateTimes.length - 1].toDate().getUTCMonth(),
+        endDay = field.dateTimes[field.dateTimes.length - 1].toDate().getUTCDate();
+    var thisYear = lastModelDateTime.toDate().getUTCFullYear(),
+        thisMonth = lastModelDateTime.toDate().getUTCMonth(),
+        thisDay = lastModelDateTime.toDate().getUTCDate();
+    $('.datepicker')
+        .datepicker({
+            format: "M, dd",
+            maxViewMode: 1,
+            todayBtn: "linked",
+            todayHighlight: true
+        })
+        .datepicker('setStartDate', new Date(startYear, startMonth, startDay))
+        .datepicker('setEndDate', new Date(endYear, endMonth, endDay))
+        .on('changeDate', (e) => {
+            console.log('1')
+            lastModelDateTime = moment(lastModelDateTime).set("month", e.date.getMonth());
+            lastModelDateTime = moment(lastModelDateTime).set("date", e.date.getDate());
+            field.dateTime = lastModelDateTime;
+
+            init_times();
+        })
+        .datepicker('update', new Date(thisYear, thisMonth, thisDay))
+
+    init_times();
+}
+
+
+function init_times() {
+    // --- Disable all hours, to be re-enabled next for the ones that exist
+    $("#btnsTime").find("button").addClass('disabled');
+
+    var hrClick = null;
+    var availTimes = field.dateTimes.filter(d => d.format("YMMDD") == lastModelDateTime.format("YMMDD"));
+    availTimes.map(d => {
+        lastModelDateTime.format("HH") == d.format("HH") ? hrClick = d.format("HH") : null;
+        $(`#hr${d.format("HH")}`).removeClass('disabled')
+    });
+
+    if (hrClick) { $(`#hr${hrClick}`).click() }
+    else { $(`#hr${availTimes[0].format("HH")}`).click() }
+}
+
+$('.btnTime').on("click", (e) => {
+    lastModelDateTime = moment(lastModelDateTime).set("hour", $(e.currentTarget).attr("id").slice(2));
+    try { draw({ init: true }); } catch { console.log('nope') }
+
+})
+
+
+function init_ddDepths() {
+    $("#ddDepth").addClass('disabled');
+
+    if (field.depths) {
+        $("#ddDepth").removeClass('disabled');
+        field.depth = field.depths[0];
+
+        $('#ddDepth').dropdown({
+            values: fields.filter(d => { return d.field == field.field && d.model == field.model })[0].depths.map((d, i) => { return { name: d.text, value: i } })
+        })
+            .dropdown('set selected', field.depth.text)
+            .dropdown('setting', 'onChange', (i) => {
+                field.depth = field.depths[i];
+                draw({ init: true });
+            })
     }
 }
 
-function init_ddDate() {
-    field.dateTime = lastModelDateTime;
-    $('#ddDate')
-        .dropdown({
-            values: availDates,
-        })
-        .dropdown('set selected', lastModelDateTime.format("MMM D"))
-        .dropdown('setting', 'onChange', (i) => {
-            lastModelDateTime = moment(lastModelDateTime).set("month", availDates[i].name.split(" ")[0])
-            lastModelDateTime = moment(lastModelDateTime).set("date", parseInt(availDates[i].name.split(" ")[1]))
-            field.dateTime = lastModelDateTime;
-            draw({init:true});
-        })
-}
-
-function init_ddTime() {
-    field.dateTime = lastModelDateTime;
-
-    $('#ddTime')
-        .dropdown({
-            values: availTimes
-        })
-        .dropdown('set selected', lastModelDateTime.format("HH:00"))
-        .dropdown('setting', 'onChange', (i) => {
-            lastModelDateTime = moment(lastModelDateTime).set("hour", availTimes[i].name.split(":")[0])
-            field.dateTime = lastModelDateTime;
-            draw({init:true});
-        })
-}
-
-function init_ddDepth() {
-    field.depth = field.depths[0];
-
-    $('#ddDepth').dropdown({
-        values: fields.filter(d => { return d.field == field.field && d.model == field.model })[0].depths.map((d, i) => { return { name: d.text, value: i } }),
-    })
-        .dropdown('set selected', field.depth.text)
-        .dropdown('setting', 'onChange', (i) => {
-            field.depth = field.depths[i];
-            draw({init:true});
-        })
-}
-
-init_ddField();
-
+init_btnFields();
 
 
 ///////////////////////////////////////////---------------------\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
 //----------------------------------------- DATE & TIME UP/DOWN -----------------------------------------\\
 $("#dayDown").on("click", () => {
-    var iDay = parseInt($("#ddDate").dropdown("get value"));
-    if (iDay > 0) {
-        $("#ddDate").dropdown("set value", iDay - 1).dropdown("set text", availDates[iDay - 1].name);
+    console.log(lastModelDateTime.format("YMMDD_HH"))
+    var tmpDate = moment(lastModelDateTime).add(-1, 'days');  // --- To avoid overwriting "lastModelDateTime"
+    if (tmpDate > field.dateTimes[0]) {
+        lastModelDateTime = tmpDate;
+        console.log(lastModelDateTime.format("YMMDD_HH"))
+        // --- All this below because of the stupid local/UTC conflict!
+        var thisYear = lastModelDateTime.toDate().getUTCFullYear(),
+            thisMonth = lastModelDateTime.toDate().getUTCMonth(),
+            thisDay = lastModelDateTime.toDate().getUTCDate();
+        $('.datepicker')
+            .datepicker('setDate', new Date(thisYear, thisMonth, thisDay))
+            .datepicker('update', new Date(thisYear, thisMonth, thisDay))
     }
 })
 
 $("#dayUp").on("click", () => {
-    var iDay = parseInt($("#ddDate").dropdown("get value"));
-    if (iDay < availDates.length - 1) {
-        $("#ddDate").dropdown("set value", iDay + 1).dropdown("set text", availDates[iDay + 1].name);
+    var tmpDate = moment(lastModelDateTime).add(1, 'days');  // --- To avoid overwriting "lastModelDateTime"
+    if (tmpDate <= field.dateTimes[field.dateTimes.length - 1]) {
+        lastModelDateTime = tmpDate;
+        // --- All this below because of the stupid local/UTC conflict!
+        var thisYear = lastModelDateTime.toDate().getUTCFullYear(),
+            thisMonth = lastModelDateTime.toDate().getUTCMonth(),
+            thisDay = lastModelDateTime.toDate().getUTCDate();
+        $('.datepicker')
+            .datepicker('setDate', new Date(thisYear, thisMonth, thisDay))
+            .datepicker('update', new Date(thisYear, thisMonth, thisDay))
     }
 })
-
-$("#timeDown").on("click", () => {
-    var iDay = parseInt($("#ddDate").dropdown("get value")),
-        iTime = parseInt($("#ddTime").dropdown("get value"));
-    if (iTime > 0) {
-        $("#ddTime").dropdown("set value", iTime - 1).dropdown("set text", availTimes[iTime - 1].name);
-    } else if (iDay > 0) {
-        $("#ddTime").dropdown("set value", availTimes.length - 1).dropdown("set text", availTimes[availTimes.length - 1].name);
-        $("#dayDown").click();
-    }
-})
-
-$("#timeUp").on("click", () => {
-    var iDay = parseInt($("#ddDate").dropdown("get value")),
-        iTime = parseInt($("#ddTime").dropdown("get value"));
-    if (iTime == availTimes.length - 1 && iDay < availDates.length - 1) {
-        $("#ddTime").dropdown("set value", 0).dropdown("set text", availTimes[0].name);
-        $("#dayUp").click();
-    } else if (iTime < availTimes.length - 1) {
-        $("#ddTime").dropdown("set value", iTime + 1).dropdown("set text", availTimes[iTime + 1].name);
-    }
-})
-
 
 
 ///////////////////////////////////////////------------------\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
@@ -302,9 +304,7 @@ $('.canvas').attr("width", mapWidth);
 $('.canvas').attr("height", mapHeight);
 
 
-
 colorPalette = palette('tol-rainbow', maxColors)
-
 
 
 $(".checkbox")
@@ -312,14 +312,9 @@ $(".checkbox")
         onChange: () => {
             isAnimation = $("#chkAnimation").checkbox('is checked');
             $('.canvas').css('display', 'none');
-
-            if (isAnimation) { $("#cnvModel_gl").css('display', 'block') }
-            else { $("#cnvModel_2d").css('display', 'block') };
-            // setTimeout(()=>{draw()},5000)
-            draw({init:false});
+            draw({ init: false });
         }
     });
-
 
 
 ///////////////////////////////////////////----------------\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
@@ -328,10 +323,9 @@ var palette = [[255, 255, 255], [255, 255, 255], [0, 102, 204], [0, 204, 255], [
 var paletteStops = [0, 0.5404, 0.5405, 5.4054, 5.6757, 32.4324, 59.4595, 86.4865, 100];
 
 
-
-cnvGL = document.getElementById('cnvModel_gl');
-cnvArrow = d3.select('#cnvModel_2d').node();
-cnvSST = d3.select('#cnvModel_SST').node();
+cnvGL = document.getElementById('cnvAnim');
+cnvArrow = d3.select('#cnvArrows').node();
+cnvSST = d3.select('#cnvSST').node();
 
 ctxGL = cnvGL.getContext('webgl', { antialiasing: false });
 ctxArrow = cnvArrow.getContext('2d');
