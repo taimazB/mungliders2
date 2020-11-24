@@ -152,6 +152,7 @@ function init_btnFields() {
             init_btnModels(e);
             unhideCanvas();
             addSettings(e);
+            try { addRemoveMouseInfo(); } catch { null }
         })
     });
 
@@ -340,7 +341,11 @@ function toggleAnimation() {
 
 function toggleMouseInfo() {
     isMouseInfo = !isMouseInfo;
+    addRemoveMouseInfo();
+}
 
+
+function addRemoveMouseInfo() {
     if (isMouseInfo) {
         $("#infoWindow").css("display", "block");
         $("#infoWindow").width(infoWindowWidth);
@@ -351,7 +356,7 @@ function toggleMouseInfo() {
                 $("#infoWindow").append(`<div id="infoSpeed" style="width:100%; height:50%; text-align:center"></div>`);
                 $("#infoWindow").append(`<div id="infoDirection" style="width:100%; height:50%; text-align:center"></div>`);
                 break;
-                default: null;
+            default: null;
         }
         map.on("mousemove", showInfo);
         $("#btnMouseInfo").addClass("active");
@@ -362,8 +367,8 @@ function toggleMouseInfo() {
         $("#btnMouseInfo").removeClass("active");
         $("#btnMouseInfo").attr("data-content", "Show data on map");
     }
-}
 
+}
 
 
 function unhideCanvas() {
