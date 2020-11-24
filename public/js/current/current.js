@@ -1,9 +1,4 @@
 function currentInit() {
-    // --- Enable dropdowns
-    // $("#ddTime").removeClass("disabled");
-    // $("#ddDepth").removeClass("disabled");
-
-
     imgGlobal.src = `models/${field.model}/${field.field}/jpg/${field.model}_${field.field}_${lastModelDateTime.format("YYYYMMDD_HH")}_${field.depth.name}.jpg`;
     imgGlobal.onload = () => {
         var top = imgGlobal.naturalHeight * (1 - (lat2y(bnds._ne.lat) + lat2y(80)) / (2 * lat2y(80)));
@@ -22,37 +17,14 @@ function currentInit() {
         ctxTmp.drawImage(imgGlobal, left, top, imgWidth, imgHeight, 0, 0, cnvTmp.width, cnvTmp.height);
 
         if (isAnimation) {
-            $("#cnvAnim").css('display', 'block');
             var imgCropped = new Image();
             imgCropped.src = cnvTmp.toDataURL();
             animateArrows(imgCropped);
         }
         else {
-            $("#cnvArrows").css('display', 'block');
             staticArrows(ctxTmp);
         }
     }
-
-    map.on('mousemove', function (e) {
-        $("#latTracker").html(num2latlon(e.lngLat.lat, 'lat'));
-        $("#lonTracker").html(num2latlon(e.lngLat.lng, 'lon'));
-
-        var rgba = ctxTmp.getImageData(e.point.x, e.point.y, 1, 1).data,
-            u = 6 * rgba[0] / 255 - 3,
-            v = 6 * rgba[1] / 255 - 3;
-
-        // --- Blue channel is used for NaN (0) values.
-        if (rgba[2] == 255) {
-            u = 0;
-            v = 0;
-        }
-
-        $("#speedTracker").html(Math.sqrt(u ** 2 + v ** 2).toFixed(3) + " <sup>m</sup>&frasl;<sub>s</sub>");
-
-        var dir = Math.atan2(v, u) * 180 / Math.PI;
-        dir = dir < 0 ? dir + 360 : dir;
-        hand1.showValue(360 - dir, 100, am4core.ease.cubicOut); // --- Gauge works clockwise
-    });
 }
 
 

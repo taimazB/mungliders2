@@ -1,9 +1,5 @@
 function sstInit() {
     $("#cnvSST").css('display', 'block');
-    // --- Disable unwanted dropdowns
-    // $("#ddTime").addClass("disabled");
-    // $("#ddDepth").addClass("disabled");
-
 
     var bnds = map.getBounds();
     // bnds = { _ne: { lat: 30, lng: -50 }, _sw: { lat: 20, lng: -40 } }
@@ -37,15 +33,6 @@ function sstInit() {
         // --- Draw part of the first image onto the new canvas
         ctxSST.putImageData(imageData, 0, 0)
     }
-
-
-    map.on('mousemove', function (e) {
-        $("#latTracker").html(num2latlon(e.lngLat.lat, 'lat'));
-        $("#lonTracker").html(num2latlon(e.lngLat.lng, 'lon'));
-
-        $("#speedTracker").html("");
-        hand1.showValue(0, 100, am4core.ease.cubicOut); // --- Gauge works clockwise    
-    });
 }
 
 
@@ -68,7 +55,7 @@ function sstMove() {
     ctxTmp = cnvTmp.getContext("2d");
     ctxTmp.drawImage(imgGlobal, left, top, imgWidth, imgHeight, 0, 0, cnvTmp.width, cnvTmp.height);
     imageData = ctxTmp.getImageData(0, 0, mapWidth, mapHeight);
-    const data = imageData.data;
+    var data = imageData.data;
     for (var i = 0; i < data.length; i += 4) {
         var rgb = grey2color(100 * data[i] / 255);
         data[i] = rgb[0]; // red

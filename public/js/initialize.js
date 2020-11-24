@@ -120,7 +120,6 @@ fields = [
     }
 ]
 
-var availDates, iDate, availTimes, iTime;
 field = fields[0];
 
 
@@ -151,13 +150,15 @@ function init_btnFields() {
             $('.canvas').css('display', 'none');
 
             init_btnModels(e);
+            unhideCanvas();
+            addSettings(e);
         })
     });
 
     btnsActivate();
 
     // --- Initiale load - choose the first field
-    $(`#btn${[...new Set(fields.map(d => d.field))][0]}`).click();
+    $(`#btn${field.field}`).click();
 }
 
 
@@ -304,17 +305,9 @@ $('.canvas').attr("width", mapWidth);
 $('.canvas').attr("height", mapHeight);
 
 
+///////////////////////////////////////////---------------\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+//----------------------------------------- COLOR PALETTE -----------------------------------------\\
 colorPalette = palette('tol-rainbow', maxColors)
-
-
-$(".checkbox")
-    .checkbox({
-        onChange: () => {
-            isAnimation = $("#chkAnimation").checkbox('is checked');
-            $('.canvas').css('display', 'none');
-            draw({ init: false });
-        }
-    });
 
 
 ///////////////////////////////////////////----------------\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
@@ -323,10 +316,146 @@ var palette = [[255, 255, 255], [255, 255, 255], [0, 102, 204], [0, 204, 255], [
 var paletteStops = [0, 0.5404, 0.5405, 5.4054, 5.6757, 32.4324, 59.4595, 86.4865, 100];
 
 
-cnvGL = document.getElementById('cnvAnim');
-cnvArrow = d3.select('#cnvArrows').node();
-cnvSST = d3.select('#cnvSST').node();
+///////////////////////////////////////////-----------\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+//----------------------------------------- ANIMATION -----------------------------------------\\
+function toggleAnimation() {
+    isAnimation = !isAnimation;
 
-ctxGL = cnvGL.getContext('webgl', { antialiasing: false });
-ctxArrow = cnvArrow.getContext('2d');
-ctxSST = cnvSST.getContext('2d');
+    if (isAnimation) {
+        $("#cnvArrows").css('display', 'none');
+        $("#cnvAnim").css('display', 'block');
+        $("#btnCurrentsAnimation i").removeClass("play");
+        $("#btnCurrentsAnimation i").addClass("pause");
+        $("#btnCurrentsAnimation").attr("data-content", "Stop animation");
+    } else {
+        $("#cnvAnim").css('display', 'none');
+        $("#cnvArrows").css('display', 'block');
+        $("#btnCurrentsAnimation i").removeClass("pause");
+        $("#btnCurrentsAnimation i").addClass("play");
+        $("#btnCurrentsAnimation").attr("data-content", "Start animation");
+    }
+
+    draw({ init: false })
+}
+
+function toggleMouseInfo() {
+    isMouseInfo = !isMouseInfo;
+
+    if (isMouseInfo) {
+        $("#infoWindow").css("display", "block");
+        $("#infoWindow").width(infoWindowWidth);
+        $("#infoWindow").empty();
+        switch (field.field) {
+            case "SST": $("#infoWindow").append(`<div id="infoSST" style="width:100%; height:100%; text-align:center"></div>`); break;
+            case "Currents":
+                $("#infoWindow").append(`<div id="infoSpeed" style="width:100%; height:50%; text-align:center"></div>`);
+                $("#infoWindow").append(`<div id="infoDirection" style="width:100%; height:50%; text-align:center"></div>`);
+                break;
+                default: null;
+        }
+        map.on("mousemove", showInfo);
+        $("#btnMouseInfo").addClass("active");
+        $("#btnMouseInfo").attr("data-content", "Hide data on map");
+    } else {
+        $("#infoWindow").css("display", "none");
+        map.off("mousemove", showInfo);
+        $("#btnMouseInfo").removeClass("active");
+        $("#btnMouseInfo").attr("data-content", "Show data on map");
+    }
+}
+
+
+
+function unhideCanvas() {
+    switch (field.field) {
+        case "Currents":
+            isAnimation ? $("#cnvAnim").css('display', 'block') : $("#cnvArrows").css('display', 'block');
+            break;
+        case "SST":
+            $("#cnvSST").css('display', 'block');
+            break;
+        default:
+            null
+    }
+}
+
+
+function addSettings(e) {
+    $("#settingsModel").empty();
+
+    switch (e) {
+        case "Currents":
+            $("#settingsModel").append(`
+            <button id="btnMouseInfo" class="ui icon mini circular toggle button ${isMouseInfo ? "active" : null}" data-content="${isMouseInfo ? "Hide data on map" : "Show data on map"}"">
+              <i class="mouse pointer icon"></i>
+            </button>
+            <button id="btnCurrentsAnimation" class="ui icon mini circular button" data-content="${isAnimation ? "Stop animation" : "Start animation"}">
+              <i class="${isAnimation ? "pause" : "play"} icon"></i>
+            </button>
+            `);
+            $("#btnMouseInfo").on("click", toggleMouseInfo);
+            $("#btnCurrentsAnimation").on("click", toggleAnimation);
+            break;
+        case "SST":
+            $("#settingsModel").append(`
+            <button id="btnMouseInfo" class="ui icon mini circular toggle button ${isMouseInfo ? "active" : null}" data-content="${isMouseInfo ? "Hide data on map" : "Show data on map"}">
+              <i class="mouse pointer icon"></i>
+            </button>
+            `);
+            $("#btnMouseInfo").on("click", toggleMouseInfo);
+            break;
+        default:
+            null;
+    }
+
+    $("button").popup();
+}
+
+$("button").popup();
+
+
+function showInfo(e) {
+    var rgba = ctxTmp.getImageData(e.point.x, e.point.y, 1, 1).data;
+
+    var x = e.originalEvent.clientX + 10;
+    if (e.point.x + infoWindowWidth + 10 > mapWidth) { x -= infoWindowWidth + 10; }
+    var y = e.originalEvent.clientY + 10;
+    if (e.point.y + infoWindowHeight + 10 > mapHeight) { y -= infoWindowHeight + 10; }
+    $("#infoWindow").offset({
+        top: y,
+        left: x
+    })
+
+    switch (field.field) {
+        case "Currents":
+            u = 6 * rgba[0] / 255 - 3,
+                v = 6 * rgba[1] / 255 - 3;
+
+            var speed = Math.sqrt(u ** 2 + v ** 2);
+            Math.sqrt(u ** 2 + v ** 2);
+            var dir = Math.atan2(v, u) * 180 / Math.PI;
+            dir = dir < 0 ? dir + 360 : dir;
+
+            if (speed > 0.017) {
+                $("#infoWindow").css("display", "block");
+                $("#infoSpeed").html(speed.toFixed(3) + " <sup>m</sup>&frasl;<sub>s</sub>");
+                $("#infoDirection").html(dir.toFixed(0) + " &deg;");
+            } else {
+                $("#infoWindow").css("display", "none");
+            }
+            break;
+
+        case "SST":
+            var temp = rgba[0] / 255. * (tMax - tMin) + tMin;
+            if (temp >= -1.8) {
+                $("#infoWindow").css("display", "block");
+                $("#infoSST").html(temp.toFixed(1) + " &deg;C");
+            } else {
+                $("#infoWindow").css("display", "none");
+            }
+            break;
+
+        default:
+            null;
+    }
+}

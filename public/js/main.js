@@ -30,6 +30,9 @@ map.on("load", () => {
 
     // --- Initial load
     draw({ init: false });
+
+    map.on('mousemove', showLatLon);
+    $("#btnMouseInfo").click();
 });
 
 
@@ -56,3 +59,13 @@ function clean() {
     cnvArrows.getContext('2d').clearRect(0, 0, mapWidth, mapHeight);
     cnvSST.getContext('2d').clearRect(0, 0, mapWidth, mapHeight);
 }
+
+
+
+function showLatLon(e) {
+    $("#latTracker").html(num2latlon(e.lngLat.lat, 'lat'));
+    $("#lonTracker").html(num2latlon(e.lngLat.lng, 'lon'));
+
+    // $("#speedTracker").html("");
+    // hand1.showValue(0, 100, am4core.ease.cubicOut); // --- Gauge works clockwise    
+};
