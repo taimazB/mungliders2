@@ -78,14 +78,14 @@ fields = [
         model: "HYCOM",
         depths: [
             { name: "0000-0010", text: "Surface (0-10 m)" },
+            { name: "0050-20000", text: "Bottom (below 50 m)" },
             { name: "0010-0050", text: "10 - 50 m" },
             { name: "0050-0100", text: "50 - 100 m" },
             { name: "0100-0200", text: "100 - 200 m" },
             { name: "0200-0500", text: "200 - 500 m" },
             { name: "0500-1000", text: "500 m - 1 km" },
             { name: "1000-1500", text: "1 - 1.5 km" },
-            { name: "1500-2000", text: "1.5 - 2 km" },
-            { name: "2000-20000", text: "Bottom (below 2 km)" }
+            { name: "1500-2000", text: "1.5 - 2 km" }
         ],
         depth: null,
         latestRun: null,
@@ -96,14 +96,14 @@ fields = [
         model: "RIOPS",
         depths: [
             { name: "0000-0010", text: "Surface (0-10 m)" },
+            { name: "0050-20000", text: "Bottom (below 50 m)" },
             { name: "0010-0050", text: "10 - 50 m" },
             { name: "0050-0100", text: "50 - 100 m" },
             { name: "0100-0200", text: "100 - 200 m" },
             { name: "0200-0500", text: "200 - 500 m" },
             { name: "0500-1000", text: "500 m - 1 km" },
             { name: "1000-1500", text: "1 - 1.5 km" },
-            { name: "1500-2000", text: "1.5 - 2 km" },
-            { name: "2000-20000", text: "Bottom (below 2 km)" }
+            { name: "1500-2000", text: "1.5 - 2 km" }
         ],
         depth: null,
         latestRun: null,
