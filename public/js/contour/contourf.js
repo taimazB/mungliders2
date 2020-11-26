@@ -1,10 +1,26 @@
-function sstInit() {
-    $("#cnvSST").css('display', 'block');
+function contourfInit() {
+    // --- Get min & max values
+    getJSON(`models/${field.model}/${field.field}/${field.model}_${field.field}.json`, function (data) {
+        switch (field.field) {
+            case "SST":
+                tMin = data.tMin;
+                tMax = data.tMax;
+                break;
+            case "SWH":
+                swhMin = data.swhMin;
+                swhMax = data.swhMax;
+                break;
+            default:
+                null;
+        }
+    });
+
+    $("#cnvContourf").css('display', 'block');
 
     var bnds = map.getBounds();
     // bnds = { _ne: { lat: 30, lng: -50 }, _sw: { lat: 20, lng: -40 } }
 
-    imgGlobal.src = `models/${field.model}/${field.field}/jpg/${field.model}_${field.field}_${lastModelDateTime.format("YYYYMMDD")}.jpg`;
+    imgGlobal.src = `models/${field.model}/${field.field}/jpg/${field.model}_${field.field}_${lastModelDateTime.format("YYYYMMDD_HH")}.jpg`;
     imgGlobal.onload = () => {
         var top = imgGlobal.naturalHeight * (1 - (lat2y(bnds._ne.lat) + lat2y(80)) / (2 * lat2y(80)));
         var bottom = imgGlobal.naturalHeight * (1 - (lat2y(bnds._sw.lat) + lat2y(80)) / (2 * lat2y(80)));
@@ -31,12 +47,12 @@ function sstInit() {
 
 
         // --- Draw part of the first image onto the new canvas
-        ctxSST.putImageData(imageData, 0, 0)
+        ctxContourf.putImageData(imageData, 0, 0)
     }
 }
 
 
-function sstMove() {
+function contourfMove() {
     var bnds = map.getBounds();
     // bnds = { _ne: { lat: 30, lng: -50 }, _sw: { lat: 20, lng: -40 } }
 
@@ -64,7 +80,7 @@ function sstMove() {
     }
 
     // --- Draw part of the first image onto the new canvas
-    ctxSST.putImageData(imageData, 0, 0)
+    ctxContourf.putImageData(imageData, 0, 0)
 }
 
 

@@ -46,7 +46,8 @@ function draw(init) {
             currentInit();
             break;
         case "SST":
-            init.init ? sstInit() : sstMove();
+        case "SWH":
+            init.init ? contourfInit() : contourfMove();
             break;
         default:
             null;
@@ -57,7 +58,7 @@ function draw(init) {
 function clean() {
     ctxGL.clear(ctxGL.DEPTH_BUFFER_BIT | ctxGL.COLOR_BUFFER_BIT | ctxGL.STENCIL_BUFFER_BIT)
     cnvArrows.getContext('2d').clearRect(0, 0, mapWidth, mapHeight);
-    cnvSST.getContext('2d').clearRect(0, 0, mapWidth, mapHeight);
+    cnvContourf.getContext('2d').clearRect(0, 0, mapWidth, mapHeight);
 }
 
 

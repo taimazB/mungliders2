@@ -13,9 +13,8 @@ var bnds;
 
 // --- Currents
 var isAnimation = true, isMouseInfo = false;
-var uMin = -3., uMax = 3.;
-var vMin = -3., vMax = 3.;
-var tMin = -2., tMax = 35;
+var uMin, uMax;
+var tMin, tMax;
 
 var maxColors = 50, colorPalette;
 
@@ -25,10 +24,10 @@ var reqAnimID;
 
 const cnvGL = document.getElementById('cnvAnim');
 const cnvArrow = d3.select('#cnvArrows').node();
-const cnvSST = d3.select('#cnvSST').node();
+const cnvContourf = d3.select('#cnvContourf').node();
 
 const ctxGL = cnvGL.getContext('webgl', { antialiasing: false });
 const ctxArrow = cnvArrow.getContext('2d');
-const ctxSST = cnvSST.getContext('2d');
+const ctxContourf = cnvContourf.getContext('2d');
 
 var infoWindowWidth = 100, infoWindowHeight = 50;

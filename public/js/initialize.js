@@ -115,7 +115,15 @@ fields = [
         depths: null,
         depth: null,
         latestRun: null,
-        dateTimes: getAvailDateTimes("JPLMUR41", "SST", 1).map(d => moment.utc(d, "YYYYMMDD")),
+        dateTimes: getAvailDateTimes("JPLMUR41", "SST", 2).map(d => moment.utc(d, "YYYYMMDD_HH")),
+        dateTime: null
+    }, {
+        field: "SWH",
+        model: "CMC",
+        depths: null,
+        depth: null,
+        latestRun: null,
+        dateTimes: getAvailDateTimes("CMC", "SWH", 2).map(d => moment.utc(d, "YYYYMMDD_HH")),
         dateTime: null
     }
 ]
@@ -144,7 +152,7 @@ setInterval(() => {
 function init_btnFields() {
     $("#btnsField").empty();
     [...new Set(fields.map(d => d.field))].forEach((e, i) => {
-        $("#btnsField").append(`<button id="btn${e}" class="ui button">${e}</button>`);
+        $("#btnsField").append(`<button id="btn${e}" class="ui button" data-content="${fieldLongName(e)}">${e}</button>`);
         $(`#btn${e}`).on('click', function () {
             // --- Hide all canvas's to display the appropriate one later
             $('.canvas').css('display', 'none');
@@ -183,9 +191,8 @@ function init_btnModels(variable) {
 
 
 function init_dates() {
-    console.log(field.dateTimes)
-    if (lastModelDateTime < field.dateTimes[0]) { console.log('belowMin'); lastModelDateTime = field.dateTimes[0] };
-    if (lastModelDateTime > field.dateTimes[field.dateTimes.length - 1]) { console.log('aboveMax'); lastModelDateTime = field.dateTimes[field.dateTimes.length - 1] };
+    if (lastModelDateTime < field.dateTimes[0]) { lastModelDateTime = field.dateTimes[0] };
+    if (lastModelDateTime > field.dateTimes[field.dateTimes.length - 1]) { lastModelDateTime = field.dateTimes[field.dateTimes.length - 1] };
 
     // --- Initialize datepicker
     // --- All this below because of the stupid local/UTC conflict!
@@ -208,7 +215,6 @@ function init_dates() {
         .datepicker('setStartDate', new Date(startYear, startMonth, startDay))
         .datepicker('setEndDate', new Date(endYear, endMonth, endDay))
         .on('changeDate', (e) => {
-            console.log('1')
             lastModelDateTime = moment(lastModelDateTime).set("month", e.date.getMonth());
             lastModelDateTime = moment(lastModelDateTime).set("date", e.date.getDate());
             field.dateTime = lastModelDateTime;
@@ -238,7 +244,7 @@ function init_times() {
 
 $('.btnTime').on("click", (e) => {
     lastModelDateTime = moment(lastModelDateTime).set("hour", $(e.currentTarget).attr("id").slice(2));
-    try { draw({ init: true }); } catch { console.log('nope') }
+    try { draw({ init: true }); } catch { null; }
 
 })
 
@@ -267,11 +273,9 @@ init_btnFields();
 ///////////////////////////////////////////---------------------\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
 //----------------------------------------- DATE & TIME UP/DOWN -----------------------------------------\\
 $("#dayDown").on("click", () => {
-    console.log(lastModelDateTime.format("YMMDD_HH"))
     var tmpDate = moment(lastModelDateTime).add(-1, 'days');  // --- To avoid overwriting "lastModelDateTime"
     if (tmpDate > field.dateTimes[0]) {
         lastModelDateTime = tmpDate;
-        console.log(lastModelDateTime.format("YMMDD_HH"))
         // --- All this below because of the stupid local/UTC conflict!
         var thisYear = lastModelDateTime.toDate().getUTCFullYear(),
             thisMonth = lastModelDateTime.toDate().getUTCMonth(),
@@ -351,11 +355,12 @@ function addRemoveMouseInfo() {
         $("#infoWindow").width(infoWindowWidth);
         $("#infoWindow").empty();
         switch (field.field) {
-            case "SST": $("#infoWindow").append(`<div id="infoSST" style="width:100%; height:100%; text-align:center"></div>`); break;
             case "Currents":
                 $("#infoWindow").append(`<div id="infoSpeed" style="width:100%; height:50%; text-align:center"></div>`);
                 $("#infoWindow").append(`<div id="infoDirection" style="width:100%; height:50%; text-align:center"></div>`);
                 break;
+            case "SST": $("#infoWindow").append(`<div id="infoSST" style="width:100%; height:100%; text-align:center"></div>`); break;
+            case "SWH": $("#infoWindow").append(`<div id="infoSWH" style="width:100%; height:100%; text-align:center"></div>`); break;
             default: null;
         }
         map.on("mousemove", showInfo);
@@ -377,7 +382,8 @@ function unhideCanvas() {
             isAnimation ? $("#cnvAnim").css('display', 'block') : $("#cnvArrows").css('display', 'block');
             break;
         case "SST":
-            $("#cnvSST").css('display', 'block');
+        case "SWH":
+            $("#cnvContourf").css('display', 'block');
             break;
         default:
             null
@@ -401,7 +407,9 @@ function addSettings(e) {
             $("#btnMouseInfo").on("click", toggleMouseInfo);
             $("#btnCurrentsAnimation").on("click", toggleAnimation);
             break;
+
         case "SST":
+        case "SWH":
             $("#settingsModel").append(`
             <button id="btnMouseInfo" class="ui icon mini circular toggle button ${isMouseInfo ? "active" : null}" data-content="${isMouseInfo ? "Hide data on map" : "Show data on map"}">
               <i class="mouse pointer icon"></i>
@@ -409,6 +417,7 @@ function addSettings(e) {
             `);
             $("#btnMouseInfo").on("click", toggleMouseInfo);
             break;
+
         default:
             null;
     }
@@ -455,6 +464,16 @@ function showInfo(e) {
             if (temp >= -1.8) {
                 $("#infoWindow").css("display", "block");
                 $("#infoSST").html(temp.toFixed(1) + " &deg;C");
+            } else {
+                $("#infoWindow").css("display", "none");
+            }
+            break;
+
+        case "SWH":
+            var swh = rgba[0] / 255. * (swhMax - swhMin) + swhMin;
+            if (swh > 0.) {
+                $("#infoWindow").css("display", "block");
+                $("#infoSWH").html(swh.toFixed(1) + " m");
             } else {
                 $("#infoWindow").css("display", "none");
             }

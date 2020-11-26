@@ -148,14 +148,30 @@
                                 <div id="btnsTime" class="eight wide column ui buttons tiny py-0"
                                     style="display:inherit; text-align: center;">
                                     <div class="ui grid" style="margin: 0;">
-                                        <button id="hr00" class="five wide column ui button p-0 btnTime">00</button>
-                                        <button id="hr03" class="five wide column ui button p-0 btnTime">03</button>
-                                        <button id="hr06" class="five wide column ui button p-0 btnTime">06</button>
-                                        <button id="hr09" class="five wide column ui button p-0 btnTime">09</button>
-                                        <button id="hr12" class="five wide column ui button p-0 btnTime">12</button>
-                                        <button id="hr15" class="five wide column ui button p-0 btnTime">15</button>
-                                        <button id="hr18" class="five wide column ui button p-0 btnTime">18</button>
-                                        <button id="hr21" class="five wide column ui button p-0 btnTime">21</button>
+                                        <button id="hr00" class="four wide column ui button p-0 btnTime">00</button>
+                                        <button id="hr01" class="four wide column ui button p-0 btnTime">01</button>
+                                        <button id="hr02" class="four wide column ui button p-0 btnTime">02</button>
+                                        <button id="hr03" class="four wide column ui button p-0 btnTime">03</button>
+                                        <button id="hr04" class="four wide column ui button p-0 btnTime">04</button>
+                                        <button id="hr05" class="four wide column ui button p-0 btnTime">05</button>
+                                        <button id="hr06" class="four wide column ui button p-0 btnTime">06</button>
+                                        <button id="hr07" class="four wide column ui button p-0 btnTime">07</button>
+                                        <button id="hr08" class="four wide column ui button p-0 btnTime">08</button>
+                                        <button id="hr09" class="four wide column ui button p-0 btnTime">09</button>
+                                        <button id="hr10" class="four wide column ui button p-0 btnTime">10</button>
+                                        <button id="hr11" class="four wide column ui button p-0 btnTime">11</button>
+                                        <button id="hr12" class="four wide column ui button p-0 btnTime">12</button>
+                                        <button id="hr13" class="four wide column ui button p-0 btnTime">13</button>
+                                        <button id="hr14" class="four wide column ui button p-0 btnTime">14</button>
+                                        <button id="hr15" class="four wide column ui button p-0 btnTime">15</button>
+                                        <button id="hr16" class="four wide column ui button p-0 btnTime">16</button>
+                                        <button id="hr17" class="four wide column ui button p-0 btnTime">17</button>
+                                        <button id="hr18" class="four wide column ui button p-0 btnTime">18</button>
+                                        <button id="hr19" class="four wide column ui button p-0 btnTime">19</button>
+                                        <button id="hr20" class="four wide column ui button p-0 btnTime">20</button>
+                                        <button id="hr21" class="four wide column ui button p-0 btnTime">21</button>
+                                        <button id="hr22" class="four wide column ui button p-0 btnTime">22</button>
+                                        <button id="hr23" class="four wide column ui button p-0 btnTime">23</button>
                                     </div>
                                 </div>
                             </div>
@@ -171,13 +187,12 @@
                                     <div class="default text">Depth (m)</div>
                                 </div>
                             </div>
-                            <!-- <div class="one wide inverted column">m</div> -->
+
+                            <div class="ui divider"></div>
+
+                            <!-- MODELS SETTINGS -->
+                            <div id="settingsModel" class="ui grid"> </div>
                         </div>
-
-                        <div class="ui divider"></div>
-
-                        <!-- MODELS SETTINGS -->
-                        <div id="settingsModel" class="ui grid"> </div>
 
 
                         <!-- ########################################################### -->
@@ -531,7 +546,7 @@
 
     <!-- <div class="pusher" style="width: 77.5%;"> -->
     <div style="width: 77.5%; height: 100%;position: absolute; right: 0">
-        <canvas id="cnvSST" class="canvas" style="display: none;"></canvas>
+        <canvas id="cnvContourf" class="canvas" style="display: none;"></canvas>
         <canvas id="cnvAnim" class="canvas" style="background-color: currentColor; display: block;"></canvas>
         <canvas id="cnvArrows" class="canvas" style="background-color: currentColor; display: none;"></canvas>
         <canvas id="cnvPathPlanning" class="canvas"></canvas>
@@ -568,7 +583,7 @@
     <script src="./js/initialize.js"></script>
     <script src="./js/current/wind-gl.js"></script>
     <script src="./js/current/current.js"></script>
-    <script src="./js/contour/sst.js"></script>
+    <script src="./js/contour/contourf.js"></script>
     <script src="./js/main.js"></script>
     <script src="./js/gauge.js"></script>
 

@@ -41,3 +41,27 @@ function btnsActivate() {
             .removeClass('active')
     })
 }
+
+
+function getJSON(url, callback) {
+    const xhr = new XMLHttpRequest();
+    xhr.responseType = 'json';
+    xhr.open('get', url, true);
+    xhr.onload = function () {
+        if (xhr.status >= 200 && xhr.status < 300) {
+            callback(xhr.response);
+        } else {
+            throw new Error(xhr.statusText);
+        }
+    };
+    xhr.send();
+}
+
+
+function fieldLongName(shortName) {
+    switch (shortName) {
+        case "SST": return "Sea Surface Temperature"; break;
+        case "SWH": return "Sea Wave Height"; break;
+        default: return ""; break;
+    }
+}
