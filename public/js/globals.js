@@ -15,6 +15,8 @@ var bnds;
 var isAnimation = true, isMouseInfo = false;
 var uMin, uMax;
 var tMin, tMax;
+var swhMin, swhMax;
+var seaiceMin, seaiceMax;
 
 var maxColors = 50, colorPalette;
 

@@ -10,6 +10,10 @@ function contourfInit() {
                 swhMin = data.swhMin;
                 swhMax = data.swhMax;
                 break;
+            case "Seaice":
+                seaiceMin = data.seaiceMin;
+                seaiceMax = data.seaiceMax;
+                break;
             default:
                 null;
         }
@@ -74,6 +78,7 @@ function contourfMove() {
     var data = imageData.data;
     for (var i = 0; i < data.length; i += 4) {
         var rgb = grey2color(100 * data[i] / 255);
+        // console.log(i, data[i], rgb)
         data[i] = rgb[0]; // red
         data[i + 1] = rgb[1]; // green
         data[i + 2] = rgb[2]; // blue
@@ -86,7 +91,7 @@ function contourfMove() {
 
 function grey2color(c) {
     for (var i = 1; i < paletteStops.length; i++) {
-        if (c < paletteStops[i]) {
+        if (c <= paletteStops[i]) {
             var w = (c - paletteStops[i - 1]) / (paletteStops[i] - paletteStops[i - 1]);
             return [(1 - w) * palette[i - 1][0] + w * palette[i][0], (1 - w) * palette[i - 1][1] + w * palette[i][1], (1 - w) * palette[i - 1][2] + w * palette[i][2]];
         }

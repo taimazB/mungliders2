@@ -125,6 +125,14 @@ fields = [
         latestRun: null,
         dateTimes: getAvailDateTimes("CMC", "SWH", 2).map(d => moment.utc(d, "YYYYMMDD_HH")),
         dateTime: null
+    }, {
+        field: "Seaice",
+        model: "CMC",
+        depths: null,
+        depth: null,
+        latestRun: null,
+        dateTimes: getAvailDateTimes("CMC", "Seaice", 2).map(d => moment.utc(d, "YYYYMMDD_HH")),
+        dateTime: null
     }
 ]
 
@@ -361,6 +369,7 @@ function addRemoveMouseInfo() {
                 break;
             case "SST": $("#infoWindow").append(`<div id="infoSST" style="width:100%; height:100%; text-align:center"></div>`); break;
             case "SWH": $("#infoWindow").append(`<div id="infoSWH" style="width:100%; height:100%; text-align:center"></div>`); break;
+            case "Seaice": $("#infoWindow").append(`<div id="infoSeaice" style="width:100%; height:100%; text-align:center"></div>`); break;
             default: null;
         }
         map.on("mousemove", showInfo);
@@ -383,6 +392,7 @@ function unhideCanvas() {
             break;
         case "SST":
         case "SWH":
+        case "Seaice":
             $("#cnvContourf").css('display', 'block');
             break;
         default:
@@ -410,6 +420,7 @@ function addSettings(e) {
 
         case "SST":
         case "SWH":
+        case "Seaice":
             $("#settingsModel").append(`
             <button id="btnMouseInfo" class="ui icon mini circular toggle button ${isMouseInfo ? "active" : null}" data-content="${isMouseInfo ? "Hide data on map" : "Show data on map"}">
               <i class="mouse pointer icon"></i>
@@ -474,6 +485,16 @@ function showInfo(e) {
             if (swh > 0.) {
                 $("#infoWindow").css("display", "block");
                 $("#infoSWH").html(swh.toFixed(1) + " m");
+            } else {
+                $("#infoWindow").css("display", "none");
+            }
+            break;
+
+        case "Seaice":
+            var seaice = rgba[0] / 255. * (seaiceMax - seaiceMin) + seaiceMin;
+            if (seaice > 0.) {
+                $("#infoWindow").css("display", "block");
+                $("#infoSeaice").html((seaice*100).toFixed(0) + " %");
             } else {
                 $("#infoWindow").css("display", "none");
             }

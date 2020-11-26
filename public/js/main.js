@@ -47,6 +47,7 @@ function draw(init) {
             break;
         case "SST":
         case "SWH":
+            case "Seaice":
             init.init ? contourfInit() : contourfMove();
             break;
         default:
