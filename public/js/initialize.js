@@ -531,9 +531,9 @@ function resetSeaiceMinMax() {
 $("#minUp").on("click", () => {
     switch (field.field) {
         // case "Currents": currentsMin += 1; varMin = currentsMin; break;
-        case "SST": sstMin += 1; varMin = sstMin; break;
-        case "SWH": swhMin += 1; varMin = swhMin; break;
-        case "Seaice": seaiceMin += 1; varMin = seaiceMin; break;
+        case "SST": if (sstMin + 1 < sstMax) { sstMin += 1; varMin = sstMin; } break;
+        case "SWH": if (swhMin + 1 < swhMax) { swhMin += 1; varMin = swhMin; } break;
+        case "Seaice": if (seaiceMin + 1 < seaiceMax) { seaiceMin += 1; varMin = seaiceMin; } break;
         default: null;
     }
     draw({ init: true });
@@ -543,9 +543,9 @@ $("#minUp").on("click", () => {
 $("#minDown").on("click", () => {
     switch (field.field) {
         // case "Currents": currentsMin -= 1; varMin = currentsMin; break;
-        case "SST": sstMin -= 1; varMin = sstMin; break;
-        case "SWH": swhMin -= 1; varMin = swhMin; break;
-        case "Seaice": seaiceMin -= 1; varMin = seaiceMin; break;
+        case "SST": if (sstMin - 1 >= sstMinOrg) { sstMin -= 1; varMin = sstMin; } break;
+        case "SWH": if (swhMin - 1 >= swhMinOrg) { swhMin -= 1; varMin = swhMin; } break;
+        case "Seaice": if (seaiceMin - 1 >= seaiceMinOrg) { seaiceMin -= 1; varMin = seaiceMin; } break;
         default: null;
     }
     draw({ init: true });
@@ -555,9 +555,9 @@ $("#minDown").on("click", () => {
 $("#maxUp").on("click", () => {
     switch (field.field) {
         // case "Currents": currentsMax += 1; varMax = currentsMax; break;
-        case "SST": sstMax += 1; varMax = sstMax; break;
-        case "SWH": swhMax += 1; varMax = swhMax; break;
-        case "Seaice": seaiceMax += 1; varMax = seaiceMax; break;
+        case "SST": if (sstMax + 1 <= sstMaxOrg) { sstMax += 1; varMax = sstMax; } break;
+        case "SWH": if (swhMax + 1 <= swhMaxOrg) { swhMax += 1; varMax = swhMax; } break;
+        case "Seaice": if (seaiceMax + 1 <= seaiceMaxOrg) { seaiceMax += 1; varMax = seaiceMax; } break;
         default: null;
     }
     draw({ init: true });
@@ -567,9 +567,9 @@ $("#maxUp").on("click", () => {
 $("#maxDown").on("click", () => {
     switch (field.field) {
         // case "Currents": currentsMax -= 1; varMax = currentsMax; break;
-        case "SST": sstMax -= 1; varMax = sstMax; break;
-        case "SWH": swhMax -= 1; varMax = swhMax; break;
-        case "Seaice": seaiceMax -= 1; varMax = seaiceMax; break;
+        case "SST": if (sstMax - 1 > sstMin) { sstMax -= 1; varMax = sstMax; } break;
+        case "SWH": if (swhMax - 1 > swhMin) { swhMax -= 1; varMax = swhMax; } break;
+        case "Seaice": if (seaiceMax - 1 > seaiceMin) { seaiceMax -= 1; varMax = seaiceMax; } break;
         default: null;
     }
     draw({ init: true });
