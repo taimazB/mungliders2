@@ -45,3 +45,13 @@ div {
 .clickable {
     cursor: pointer;
 }
+
+.colorbarLabel {
+    margin: 0;
+    padding: 0;
+    transform: rotate(-90deg);
+    border-top-style: solid;
+    border-top-width: thin;
+    font-size: smaller;
+    position: absolute;
+}

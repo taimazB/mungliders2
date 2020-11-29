@@ -1,23 +1,24 @@
 function contourfInit() {
-    // --- Get min & max values
-    getJSON(`models/${field.model}/${field.field}/${field.model}_${field.field}.json`, function (data) {
-        switch (field.field) {
-            case "SST":
-                tMin = data.tMin;
-                tMax = data.tMax;
-                break;
-            case "SWH":
-                swhMin = data.swhMin;
-                swhMax = data.swhMax;
-                break;
-            case "Seaice":
-                seaiceMin = data.seaiceMin;
-                seaiceMax = data.seaiceMax;
-                break;
-            default:
-                null;
-        }
-    });
+    // --- Get min & max values ; set color palette
+    switch (field.field) {
+        case "SST":
+            varMin = sstMin; varMax = sstMax;
+            varMinOrg = sstMinOrg; varMaxOrg = sstMaxOrg;
+            varPalette = colorPaletteRainbow;
+            break;
+        case "SWH":
+            varMin = swhMin; varMax = swhMax;
+            varMinOrg = swhMinOrg; varMaxOrg = swhMaxOrg;
+            varPalette = colorPaletteRainbow;
+            break;
+        case "Seaice":
+            varMin = seaiceMin; varMax = seaiceMax;
+            varMinOrg = seaiceMinOrg; varMaxOrg = seaiceMaxOrg;
+            varPalette = colorPaletteBlue;
+            break;
+        default:
+            null;
+    }
 
     $("#cnvContourf").css('display', 'block');
 
@@ -32,6 +33,7 @@ function contourfInit() {
         var right = imgGlobal.naturalWidth * (bnds._ne.lng + 180) / 360;
         var imgWidth = right - left;
         var imgHeight = bottom - top;
+        
 
         // --- Crop image for the visible part of map
         cnvTmp.width = mapWidth;                        // size of new image
@@ -42,8 +44,12 @@ function contourfInit() {
         ctxTmp.drawImage(imgGlobal, left, top, imgWidth, imgHeight, 0, 0, cnvTmp.width, cnvTmp.height);
         imageData = ctxTmp.getImageData(0, 0, mapWidth, mapHeight);
         const data = imageData.data;
+        
+        adjustColorbar(varMin,varMax,varPalette);
+
         for (var i = 0; i < data.length; i += 4) {
-            var rgb = grey2color(100 * data[i] / 255);
+            // var rgb = colorPalette((varMaxOrg - varMinOrg) / (varMax - varMin) * data[i] / 255.-);
+            var rgb = varPalette((data[i] / 255. - (varMin - varMinOrg) / (varMaxOrg - varMinOrg)) * (varMaxOrg - varMinOrg) / (varMax - varMin));
             data[i] = rgb[0]; // red
             data[i + 1] = rgb[1]; // green
             data[i + 2] = rgb[2]; // blue
@@ -76,9 +82,9 @@ function contourfMove() {
     ctxTmp.drawImage(imgGlobal, left, top, imgWidth, imgHeight, 0, 0, cnvTmp.width, cnvTmp.height);
     imageData = ctxTmp.getImageData(0, 0, mapWidth, mapHeight);
     var data = imageData.data;
+
     for (var i = 0; i < data.length; i += 4) {
-        var rgb = grey2color(100 * data[i] / 255);
-        // console.log(i, data[i], rgb)
+        var rgb = varPalette((data[i] / 255. - (varMin - varMinOrg) / (varMaxOrg - varMinOrg)) * (varMaxOrg - varMinOrg) / (varMax - varMin));
         data[i] = rgb[0]; // red
         data[i + 1] = rgb[1]; // green
         data[i + 2] = rgb[2]; // blue
@@ -86,14 +92,4 @@ function contourfMove() {
 
     // --- Draw part of the first image onto the new canvas
     ctxContourf.putImageData(imageData, 0, 0)
-}
-
-
-function grey2color(c) {
-    for (var i = 1; i < paletteStops.length; i++) {
-        if (c <= paletteStops[i]) {
-            var w = (c - paletteStops[i - 1]) / (paletteStops[i] - paletteStops[i - 1]);
-            return [(1 - w) * palette[i - 1][0] + w * palette[i][0], (1 - w) * palette[i - 1][1] + w * palette[i][1], (1 - w) * palette[i - 1][2] + w * palette[i][2]];
-        }
-    }
 }

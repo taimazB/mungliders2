@@ -1,4 +1,8 @@
 function currentInit() {
+    varMin = currentsMin; varMax = currentsMax;
+    varMinOrg = currentsMinOrg; varMaxOrg = currentsMaxOrg;
+    varPalette = colorPaletteRainbow;
+
     imgGlobal.src = `models/${field.model}/${field.field}/jpg/${field.model}_${field.field}_${lastModelDateTime.format("YYYYMMDD_HH")}_${field.depth.name}.jpg`;
     imgGlobal.onload = () => {
         var top = imgGlobal.naturalHeight * (1 - (lat2y(bnds._ne.lat) + lat2y(80)) / (2 * lat2y(80)));
@@ -15,6 +19,8 @@ function currentInit() {
         // --- Draw part of the first image onto the new canvas
         ctxTmp = cnvTmp.getContext("2d");
         ctxTmp.drawImage(imgGlobal, left, top, imgWidth, imgHeight, 0, 0, cnvTmp.width, cnvTmp.height);
+
+        adjustColorbar(0, varMax, varPalette);
 
         if (isAnimation) {
             var imgCropped = new Image();
@@ -39,10 +45,7 @@ function animateArrows(img) {
         }
         reqAnimID = requestAnimationFrame(frame);
     }
-
-    initLoad ? frame() : null;
-    initLoad = false;
-
+    frame();
 
     // function updateRetina() {
     //     const ratio = meta['retina resolution'] ? pxRatio : 1;
@@ -51,10 +54,9 @@ function animateArrows(img) {
     //     wind.resize();
     // }
 
-
     getJSON(`models/${field.model}/${field.field}/${field.model}_${field.field}.json`, function (windData) {
-        uMin = windData.uMin;
-        uMax = windData.uMax;
+        windData.varMin = currentsMin;
+        windData.varMax = currentsMax;
         windData.image = img;
         wind.setWind(windData);
     });
@@ -83,8 +85,8 @@ function staticArrows(ctxArrowData) {
     for (var i = 0; i <= mapWidth; i = i + spacing) {
         for (var j = 0; j <= mapHeight; j = j + spacing) {
             [u, v] = ctxArrowData.getImageData(i, j, 1, 1).data;
-            u = (u / 255) * (uMax - uMin) + uMin;
-            v = -((v / 255) * (vMax - vMin) + vMin);
+            u = (u / 255) * (varMax - varMin) + varMin;
+            v = -((v / 255) * (varMax - varMin) + varMin);
 
             data.push({
                 x: i,
@@ -115,7 +117,7 @@ function staticArrows(ctxArrowData) {
             .attr("v", d => d.v)
             .attr("speed", d => d.speed)
             .attr("direction", d => d.direction)
-            .attr('color', function (d) { return "#" + colorPalette[Math.floor(maxColors * d.speed / 3)]; })
+            .attr('color', d => `rgb(${varPalette(d.speed / currentsMax).join()})`)
 
         join
             .exit()

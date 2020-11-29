@@ -2,6 +2,6 @@
 "source": "https://ncss.hycom.org/thredds/ncss/GLBy0.08/expt_93.0/FMRC/runs",
 "width": 18000,
 "height": 8001,
-"tMin": -2.0,
-"tMax": 35.0
+"varMin": -2.0,
+"varMax": 35.0
 }

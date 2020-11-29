@@ -13,14 +13,13 @@ var bnds;
 
 // --- Currents
 var isAnimation = true, isMouseInfo = false;
-var uMin, uMax;
-var tMin, tMax;
-var swhMin, swhMax;
-var seaiceMin, seaiceMax;
 
-var maxColors = 50, colorPalette;
-
-var palette, paletteStops;
+// --- Min & Max
+var varMin, varMax, varMinOrg, varMaxOrg, varPalette;
+var currentsMinOrg, currentsMaxOrg, currentsMin, currentsMax;
+var sstMinOrg, sstMaxOrg, sstMin, sstMax;
+var swhMinOrg, swhMaxOrg, swhMin, swhMax;
+var seaiceMinOrg, seaiceMaxOrg, seaiceMin, seaiceMax;
 
 var reqAnimID;
 

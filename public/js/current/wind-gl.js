@@ -380,8 +380,8 @@
         gl.uniform1i(program.u_color_ramp, 2);
 
         gl.uniform1f(program.u_particles_res, this.particleStateResolution);
-        gl.uniform2f(program.u_wind_min, this.windData.uMin, this.windData.vMin);
-        gl.uniform2f(program.u_wind_max, this.windData.uMax, this.windData.vMax);
+        gl.uniform2f(program.u_wind_min, this.windData.varMin, this.windData.varMin);
+        gl.uniform2f(program.u_wind_max, this.windData.varMax, this.windData.varMax);
 
         gl.drawArrays(gl.POINTS, 0, this._numParticles);
     };
@@ -401,8 +401,8 @@
 
         gl.uniform1f(program.u_rand_seed, Math.random());
         gl.uniform2f(program.u_wind_res, this.windData.width, this.windData.height);
-        gl.uniform2f(program.u_wind_min, this.windData.uMin, this.windData.vMin);
-        gl.uniform2f(program.u_wind_max, this.windData.uMax, this.windData.vMax);
+        gl.uniform2f(program.u_wind_min, this.windData.varMin, this.windData.varMin);
+        gl.uniform2f(program.u_wind_max, this.windData.varMax, this.windData.varMax);
         gl.uniform1f(program.u_speed_factor, this.speedFactor);
         gl.uniform1f(program.u_drop_rate, this.dropRate);
         gl.uniform1f(program.u_drop_rate_bump, this.dropRateBump);

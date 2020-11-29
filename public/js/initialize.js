@@ -168,7 +168,7 @@ function init_btnFields() {
             init_btnModels(e);
             unhideCanvas();
             addSettings(e);
-            try { addRemoveMouseInfo(); } catch { null }
+            try { addRemoveMouseInfo(); } catch (err) { null }
         })
     });
 
@@ -195,43 +195,44 @@ function init_btnModels(variable) {
 
     // --- Choose the first model
     $(`#btn${fields.filter(d => d.field == variable)[0].model}`).click();
-}
 
 
-function init_dates() {
-    if (lastModelDateTime < field.dateTimes[0]) { lastModelDateTime = field.dateTimes[0] };
-    if (lastModelDateTime > field.dateTimes[field.dateTimes.length - 1]) { lastModelDateTime = field.dateTimes[field.dateTimes.length - 1] };
 
-    // --- Initialize datepicker
-    // --- All this below because of the stupid local/UTC conflict!
-    var startYear = field.dateTimes[0].toDate().getUTCFullYear(),
-        startMonth = field.dateTimes[0].toDate().getUTCMonth(),
-        startDay = field.dateTimes[0].toDate().getUTCDate();
-    var endYear = field.dateTimes[field.dateTimes.length - 1].toDate().getUTCFullYear(),
-        endMonth = field.dateTimes[field.dateTimes.length - 1].toDate().getUTCMonth(),
-        endDay = field.dateTimes[field.dateTimes.length - 1].toDate().getUTCDate();
-    var thisYear = lastModelDateTime.toDate().getUTCFullYear(),
-        thisMonth = lastModelDateTime.toDate().getUTCMonth(),
-        thisDay = lastModelDateTime.toDate().getUTCDate();
-    $('.datepicker')
-        .datepicker({
-            format: "M, dd",
-            maxViewMode: 1,
-            todayBtn: "linked",
-            todayHighlight: true
-        })
-        .datepicker('setStartDate', new Date(startYear, startMonth, startDay))
-        .datepicker('setEndDate', new Date(endYear, endMonth, endDay))
-        .on('changeDate', (e) => {
-            lastModelDateTime = moment(lastModelDateTime).set("month", e.date.getMonth());
-            lastModelDateTime = moment(lastModelDateTime).set("date", e.date.getDate());
-            field.dateTime = lastModelDateTime;
+    function init_dates() {
+        if (lastModelDateTime < field.dateTimes[0]) { lastModelDateTime = field.dateTimes[0] };
+        if (lastModelDateTime > field.dateTimes[field.dateTimes.length - 1]) { lastModelDateTime = field.dateTimes[field.dateTimes.length - 1] };
 
-            init_times();
-        })
-        .datepicker('update', new Date(thisYear, thisMonth, thisDay))
+        // --- Initialize datepicker
+        // --- All this below because of the stupid local/UTC conflict!
+        var startYear = field.dateTimes[0].toDate().getUTCFullYear(),
+            startMonth = field.dateTimes[0].toDate().getUTCMonth(),
+            startDay = field.dateTimes[0].toDate().getUTCDate();
+        var endYear = field.dateTimes[field.dateTimes.length - 1].toDate().getUTCFullYear(),
+            endMonth = field.dateTimes[field.dateTimes.length - 1].toDate().getUTCMonth(),
+            endDay = field.dateTimes[field.dateTimes.length - 1].toDate().getUTCDate();
+        var thisYear = lastModelDateTime.toDate().getUTCFullYear(),
+            thisMonth = lastModelDateTime.toDate().getUTCMonth(),
+            thisDay = lastModelDateTime.toDate().getUTCDate();
+        $('.datepicker')
+            .datepicker({
+                format: "M, dd",
+                maxViewMode: 1,
+                todayBtn: "linked",
+                todayHighlight: true
+            })
+            .datepicker('setStartDate', new Date(startYear, startMonth, startDay))
+            .datepicker('setEndDate', new Date(endYear, endMonth, endDay))
+            .on('changeDate', (e) => {
+                lastModelDateTime = moment(lastModelDateTime).set("month", e.date.getMonth());
+                lastModelDateTime = moment(lastModelDateTime).set("date", e.date.getDate());
+                field.dateTime = lastModelDateTime;
 
-    init_times();
+                init_times();
+            })
+            .datepicker('update', new Date(thisYear, thisMonth, thisDay))
+
+        init_times();
+    }
 }
 
 
@@ -252,7 +253,7 @@ function init_times() {
 
 $('.btnTime').on("click", (e) => {
     lastModelDateTime = moment(lastModelDateTime).set("hour", $(e.currentTarget).attr("id").slice(2));
-    try { draw({ init: true }); } catch { null; }
+    try { draw({ init: true }); } catch (err) { null; }
 
 })
 
@@ -318,11 +319,6 @@ $('.canvas').attr("width", mapWidth);
 $('.canvas').attr("height", mapHeight);
 
 
-///////////////////////////////////////////---------------\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
-//----------------------------------------- COLOR PALETTE -----------------------------------------\\
-colorPalette = palette('tol-rainbow', maxColors)
-
-
 ///////////////////////////////////////////----------------\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
 //----------------------------------------- CONTOUR COLORS -----------------------------------------\\
 var palette = [[255, 255, 255], [255, 255, 255], [0, 102, 204], [0, 204, 255], [0, 255, 255], [0, 255, 0], [255, 255, 0], [255, 0, 0], [255, 204, 204]];
@@ -367,9 +363,9 @@ function addRemoveMouseInfo() {
                 $("#infoWindow").append(`<div id="infoSpeed" style="width:100%; height:50%; text-align:center"></div>`);
                 $("#infoWindow").append(`<div id="infoDirection" style="width:100%; height:50%; text-align:center"></div>`);
                 break;
-            case "SST": $("#infoWindow").append(`<div id="infoSST" style="width:100%; height:100%; text-align:center"></div>`); break;
-            case "SWH": $("#infoWindow").append(`<div id="infoSWH" style="width:100%; height:100%; text-align:center"></div>`); break;
-            case "Seaice": $("#infoWindow").append(`<div id="infoSeaice" style="width:100%; height:100%; text-align:center"></div>`); break;
+            case "SST":
+            case "SWH":
+            case "Seaice": $("#infoWindow").append(`<div id="infoContourf" style="width:100%; height:100%; text-align:center"></div>`); break;
             default: null;
         }
         map.on("mousemove", showInfo);
@@ -471,30 +467,12 @@ function showInfo(e) {
             break;
 
         case "SST":
-            var temp = rgba[0] / 255. * (tMax - tMin) + tMin;
-            if (temp >= -1.8) {
-                $("#infoWindow").css("display", "block");
-                $("#infoSST").html(temp.toFixed(1) + " &deg;C");
-            } else {
-                $("#infoWindow").css("display", "none");
-            }
-            break;
-
         case "SWH":
-            var swh = rgba[0] / 255. * (swhMax - swhMin) + swhMin;
-            if (swh > 0.) {
-                $("#infoWindow").css("display", "block");
-                $("#infoSWH").html(swh.toFixed(1) + " m");
-            } else {
-                $("#infoWindow").css("display", "none");
-            }
-            break;
-
         case "Seaice":
-            var seaice = rgba[0] / 255. * (seaiceMax - seaiceMin) + seaiceMin;
-            if (seaice > 0.) {
+            var point = rgba[0] / 255. * (varMaxOrg - varMinOrg) + varMinOrg;
+            if (point >= -1.8) {
                 $("#infoWindow").css("display", "block");
-                $("#infoSeaice").html((seaice*100).toFixed(0) + " %");
+                $("#infoContourf").html(point.toFixed(1) + " &deg;C");
             } else {
                 $("#infoWindow").css("display", "none");
             }
@@ -504,3 +482,105 @@ function showInfo(e) {
             null;
     }
 }
+
+
+///////////////////////////////////////////-------------\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+//----------------------------------------- VAR MIN/MAX -----------------------------------------\\
+getJSON(`models/HYCOM/Currents/HYCOM_Currents.json`, function (data) {
+    currentsMinOrg = data.varMin;
+    currentsMaxOrg = data.varMax;
+    resetCurrentsMinMax();
+});
+getJSON(`models/JPLMUR41/SST/JPLMUR41_SST.json`, function (data) {
+    sstMinOrg = data.varMin;
+    sstMaxOrg = data.varMax;
+    resetSSTminMax();
+});
+getJSON(`models/CMC/SWH/CMC_SWH.json`, function (data) {
+    swhMinOrg = data.varMin;
+    swhMaxOrg = data.varMax;
+    resetSWHminMax();
+});
+getJSON(`models/CMC/Seaice/CMC_Seaice.json`, function (data) {
+    seaiceMinOrg = data.varMin;
+    seaiceMaxOrg = data.varMax;
+    resetSeaiceMinMax();
+});
+
+function resetCurrentsMinMax() {
+    currentsMin = currentsMinOrg;
+    currentsMax = currentsMaxOrg;
+}
+
+function resetSSTminMax() {
+    sstMin = sstMinOrg;
+    sstMax = sstMaxOrg;
+}
+
+function resetSWHminMax() {
+    swhMin = swhMinOrg;
+    swhMax = swhMaxOrg;
+}
+
+function resetSeaiceMinMax() {
+    seaiceMin = seaiceMinOrg;
+    seaiceMax = seaiceMaxOrg;
+}
+
+
+$("#minUp").on("click", () => {
+    switch (field.field) {
+        // case "Currents": currentsMin += 1; varMin = currentsMin; break;
+        case "SST": sstMin += 1; varMin = sstMin; break;
+        case "SWH": swhMin += 1; varMin = swhMin; break;
+        case "Seaice": seaiceMin += 1; varMin = seaiceMin; break;
+        default: null;
+    }
+    draw({ init: true });
+    adjustColorbar(varMin, varMax, varPalette);
+})
+
+$("#minDown").on("click", () => {
+    switch (field.field) {
+        // case "Currents": currentsMin -= 1; varMin = currentsMin; break;
+        case "SST": sstMin -= 1; varMin = sstMin; break;
+        case "SWH": swhMin -= 1; varMin = swhMin; break;
+        case "Seaice": seaiceMin -= 1; varMin = seaiceMin; break;
+        default: null;
+    }
+    draw({ init: true });
+    adjustColorbar(varMin, varMax, varPalette);
+})
+
+$("#maxUp").on("click", () => {
+    switch (field.field) {
+        // case "Currents": currentsMax += 1; varMax = currentsMax; break;
+        case "SST": sstMax += 1; varMax = sstMax; break;
+        case "SWH": swhMax += 1; varMax = swhMax; break;
+        case "Seaice": seaiceMax += 1; varMax = seaiceMax; break;
+        default: null;
+    }
+    draw({ init: true });
+    adjustColorbar(varMin, varMax, varPalette);
+})
+
+$("#maxDown").on("click", () => {
+    switch (field.field) {
+        // case "Currents": currentsMax -= 1; varMax = currentsMax; break;
+        case "SST": sstMax -= 1; varMax = sstMax; break;
+        case "SWH": swhMax -= 1; varMax = swhMax; break;
+        case "Seaice": seaiceMax -= 1; varMax = seaiceMax; break;
+        default: null;
+    }
+    draw({ init: true });
+    adjustColorbar(varMin, varMax, varPalette);
+})
+
+$("#btnResetMinMax").on("click", () => {
+    resetCurrentsMinMax();
+    resetSSTminMax();
+    resetSWHminMax();
+    resetSeaiceMinMax();
+
+    draw({ init: true });
+})

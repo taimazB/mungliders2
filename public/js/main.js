@@ -41,13 +41,14 @@ function draw(init) {
     bnds = map.getBounds();
     // bnds = { _ne: { lat: 50, lng: -50 }, _sw: { lat: 40, lng: -40 } }
 
+    cancelAnimationFrame(reqAnimID);
     switch (field.field) {
         case "Currents":
             currentInit();
             break;
         case "SST":
         case "SWH":
-            case "Seaice":
+        case "Seaice":
             init.init ? contourfInit() : contourfMove();
             break;
         default:

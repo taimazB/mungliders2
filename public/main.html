@@ -100,28 +100,28 @@
             <div class="ui grid inverted m-0">
 
                 <!-- TAB HEADERS -->
-                <div class="two wide column" style="padding:0; margin: 0; height: 95vh;">
+                <div class="two wide column" style="padding:0; margin: 0; height: 90vh;">
                     <button name="tabModels" class="ui inverted icon button tabButtons active"
-                        data-content="Overlay Model Fields" style="height: 30vh;">
+                        data-content="Overlay Model Fields" style="height: 27vh;">
                         <i class="fas fa-globe-americas"></i>
                     </button>
                     <button name="tabPathPlanning" class="ui inverted icon button tabButtons"
-                        data-content="Path Planning" style="height: 30vh;">
+                        data-content="Path Planning" style="height: 27vh;">
                         <i class="fas fa-route"></i>
                     </button>
                     <button name="tabMissionsArchieve" class="ui inverted icon button tabButtons"
-                        data-content="Missions Archieve" style="height: 30vh;">
+                        data-content="Missions Archieve" style="height: 27vh;">
                         <i class="fas fa-archive"></i>
                     </button>
                     <button name="tabSettings" class="ui inverted icon button tabButtons" data-content="Settings"
-                        style="height: 5vh;">
+                        style="height: 9vh;">
                         <i class="fas fa-cog"></i>
                     </button>
                 </div>
 
                 <!-- TAB CONTENTS -->
                 <div class="fourteen wide column p-0">
-                    <div class="p-3" style="height: 95vh; overflow:auto;">
+                    <div class="p-3" style="height: 90vh; overflow:auto;">
                         <!-- MODELS TAB -->
                         <div id="tabModels" class="ui segment inverted tabContent" style="display: block;">
                             <div class="ui grid inverted">
@@ -191,7 +191,8 @@
                             <div class="ui divider"></div>
 
                             <!-- MODELS SETTINGS -->
-                            <div id="settingsModel" class="ui grid"> </div>
+                            <div id="settingsModel" class="ui grid"
+                                style="width: 15%; float: right; justify-content: center;"> </div>
                         </div>
 
 
@@ -519,26 +520,39 @@
                 </div>
             </div>
 
-            <div class="p-0" style="height: 5vh;">
-                <div class="ui grid inverted m-0">
-                    <!-- <div id="activeModel" class="six wide column"
-                        style="text-align: center; font-size: large; font-family: 'Ubuntu', sans-serif;">
-                        RIOPS
-                    </div>-->
+            <div style="height: 10vh; width: 100%;">
+                <div class="ui grid my-0" style="padding: 0;width: 100%;height: 5vh;justify-content: center;">
+                    <div class="one wide column m-0">
+                        <i id="minUp" class="fas fa-angle-up clickable" aria-hidden="true"></i>
+                        <i id="minDown" class="fas fa-angle-down clickable" aria-hidden="true"></i>
+                    </div>
+                    <div class="twelve wide column m-0">
+                        <div style="height: 2vh;width: 100%;position: relative;margin-bottom: 5px;">
+                            <label id="lbColorbar0" class="colorbarLabel" style="left: 0%;"></label>
+                            <label id="lbColorbar25" class="colorbarLabel" style="left: 25%;"></label>
+                            <label id="lbColorbar50" class="colorbarLabel" style="left: 50%;"></label>
+                            <label id="lbColorbar75" class="colorbarLabel" style="left: 75%;"></label>
+                            <label id="lbColorbar100" class="colorbarLabel" style="left: 100%;"></label>
+                        </div>
+                        <div id="colorbar" style="height: 1vh;width: 100%;">
+                        </div>
+                    </div>
+                    <div class="one wide column">
+                        <i id="maxUp" class="fas fa-angle-up clickable" aria-hidden="true"></i>
+                        <i id="maxDown" class="fas fa-angle-down clickable" aria-hidden="true"></i>
+                    </div>
+                    <div class="one wide column">
 
-                    <!-- Speed -->
-                    <!-- <div id="speedTracker" class="five wide column p-1" style="font-weight: bold; text-align: center;">
-                        <p class="m-0" style="text-align:center">-</p>
-                        <p class="m-0" style="text-align:center"><sup>m</sup>/<sub>s</sub></p>
-                    </div> -->
+                        <button id="btnResetMinMax" class="ui inverted icon button" data-content="Reset min & max values">
+                            <i class="fas fa-redo-alt" aria-hidden="true"></i>
+                        </button>
+                    </div>
+                </div>
 
-                    <!-- Direction Gauge -->
-                    <!-- <div id="directionTracker" class="five wide column p-0" style="height: 7vh;">
-                    </div> -->
-
-                    <div id="dateTime" class="eight wide column p-0" style="text-align: center; color:gold;">-</div>
-                    <div id="latTracker" class="four wide column p-0" style="text-align: center;">-</div>
-                    <div id="lonTracker" class="four wide column p-0" style="text-align: center;">-</div>
+                <div class="ui grid my-0" style="height: 5vh;">
+                    <div id="dateTime" class="eight wide column p-0" style="text-align: center; color:gold;">- UTC</div>
+                    <div id="latTracker" class="four wide column p-0" style="text-align: center;">- °N</div>
+                    <div id="lonTracker" class="four wide column p-0" style="text-align: center;">- °W</div>
                 </div>
             </div>
         </div>
