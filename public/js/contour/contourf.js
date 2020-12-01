@@ -22,7 +22,6 @@ function contourfInit() {
 
     $("#cnvContourf").css('display', 'block');
 
-    var bnds = map.getBounds();
     // bnds = { _ne: { lat: 30, lng: -50 }, _sw: { lat: 20, lng: -40 } }
 
     imgGlobal.src = `models/${field.model}/${field.field}/jpg/${field.model}_${field.field}_${lastModelDateTime.format("YYYYMMDD_HH")}.jpg`;
@@ -63,7 +62,6 @@ function contourfInit() {
 
 
 function contourfMove() {
-    var bnds = map.getBounds();
     // bnds = { _ne: { lat: 30, lng: -50 }, _sw: { lat: 20, lng: -40 } }
 
     var top = imgGlobal.naturalHeight * (1 - (lat2y(bnds._ne.lat) + lat2y(80)) / (2 * lat2y(80)));

@@ -13,8 +13,11 @@ var map = new mapboxgl.Map({
     style: 'mapbox://styles/taimaz/ckg5j52mi2q0y19pe8z3dxly8?fresh=true'
 });
 
+map.dragRotate.disable();
+map.touchZoomRotate.disable();
+// map.touchPitch.disable();
 
-map.addControl(new mapboxgl.NavigationControl(), 'bottom-right');
+map.addControl(new mapboxgl.NavigationControl({ showCompass: false }), 'bottom-right');
 map.scrollZoom.setWheelZoomRate(1);
 
 
@@ -30,6 +33,7 @@ map.on("load", () => {
 
     // --- Initial load
     draw({ init: false });
+    bathymetryInit();
 
     map.on('mousemove', showLatLon);
     $("#btnMouseInfo").click();
@@ -54,13 +58,16 @@ function draw(init) {
         default:
             null;
     }
+
+    bathymetryMove();
 }
 
 
 function clean() {
     ctxGL.clear(ctxGL.DEPTH_BUFFER_BIT | ctxGL.COLOR_BUFFER_BIT | ctxGL.STENCIL_BUFFER_BIT)
-    cnvArrows.getContext('2d').clearRect(0, 0, mapWidth, mapHeight);
-    cnvContourf.getContext('2d').clearRect(0, 0, mapWidth, mapHeight);
+    ctxArrow.clearRect(0, 0, mapWidth, mapHeight);
+    ctxContourf.clearRect(0, 0, mapWidth, mapHeight);
+    ctxBathymetry.clearRect(0, 0, mapWidth, mapHeight);
 }
 
 

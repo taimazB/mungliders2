@@ -315,8 +315,8 @@ $("#dayUp").on("click", () => {
 mapWidth = parseInt($("#map").css("width"));
 mapHeight = parseInt($("#map").css("height"));
 
-$('.canvas').attr("width", mapWidth);
-$('.canvas').attr("height", mapHeight);
+$('.canvas').attr("width", mapWidth).attr("height", mapHeight);
+$("#cnvBG").attr("width", mapWidth).attr("height", mapHeight);
 
 
 ///////////////////////////////////////////----------------\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
@@ -368,6 +368,9 @@ function addRemoveMouseInfo() {
             case "Seaice": $("#infoWindow").append(`<div id="infoContourf" style="width:100%; height:100%; text-align:center"></div>`); break;
             default: null;
         }
+        $("#infoWindow").append(`<div class="ui divider"></div>`);
+        $("#infoWindow").append(`<div id="infoBathymetry" style="width:100%; height:50%; text-align:center"></div>`);
+
         map.on("mousemove", showInfo);
         $("#btnMouseInfo").addClass("active");
         $("#btnMouseInfo").attr("data-content", "Hide data on map");
@@ -400,29 +403,45 @@ function unhideCanvas() {
 function addSettings(e) {
     $("#settingsModel").empty();
 
+    // --- Common settings
+    $("#settingsModel").append(`
+            <button id="btnMouseInfo" class="ui icon mini circular toggle button m-2 ${isMouseInfo ? "active" : null}" data-content="${isMouseInfo ? "Hide data on map" : "Show data on map"}"">
+              <i class="mouse pointer icon"></i>
+            </button>
+
+            <input id="bathymetryOpacity" class="m-2" type="text"/>
+            `);
+    $("#btnMouseInfo").on("click", toggleMouseInfo);
+    $("#bathymetryOpacity").slider({
+        tooltip_position: "left",
+        orientation: "vertical",
+        min: 0,
+        max: 100,
+        value: bathymetryOpacityValue,
+        step: 10,
+        reversed: true,
+        formatter: (value) => { return `Bathymetry opacity: ${value}%` }
+    })
+        .on("change", (e) => {
+            bathymetryOpacityValue = e.value.newValue;
+            $("#cnvBathymetry").css("opacity", e.value.newValue / 100);
+            $(".canvas").css("opacity", 1 - e.value.newValue / 100);
+        })
+
+    // --- Specific settings
     switch (e) {
         case "Currents":
             $("#settingsModel").append(`
-            <button id="btnMouseInfo" class="ui icon mini circular toggle button ${isMouseInfo ? "active" : null}" data-content="${isMouseInfo ? "Hide data on map" : "Show data on map"}"">
-              <i class="mouse pointer icon"></i>
-            </button>
-            <button id="btnCurrentsAnimation" class="ui icon mini circular button" data-content="${isAnimation ? "Stop animation" : "Start animation"}">
+            <button id="btnCurrentsAnimation" class="ui icon mini circular button m-2" data-content="${isAnimation ? "Stop animation" : "Start animation"}">
               <i class="${isAnimation ? "pause" : "play"} icon"></i>
             </button>
             `);
-            $("#btnMouseInfo").on("click", toggleMouseInfo);
             $("#btnCurrentsAnimation").on("click", toggleAnimation);
             break;
 
         case "SST":
         case "SWH":
         case "Seaice":
-            $("#settingsModel").append(`
-            <button id="btnMouseInfo" class="ui icon mini circular toggle button ${isMouseInfo ? "active" : null}" data-content="${isMouseInfo ? "Hide data on map" : "Show data on map"}">
-              <i class="mouse pointer icon"></i>
-            </button>
-            `);
-            $("#btnMouseInfo").on("click", toggleMouseInfo);
             break;
 
         default:
@@ -437,6 +456,7 @@ $("button").popup();
 
 function showInfo(e) {
     var rgba = ctxTmp.getImageData(e.point.x, e.point.y, 1, 1).data;
+    var rgbaBathymetry = ctxBathymetry.getImageData(e.point.x, e.point.y, 1, 1).data;
 
     var x = e.originalEvent.clientX + 10;
     if (e.point.x + infoWindowWidth + 10 > mapWidth) { x -= infoWindowWidth + 10; }
@@ -481,6 +501,8 @@ function showInfo(e) {
         default:
             null;
     }
+
+    $("#infoBathymetry").html(-((rgbaBathymetry[0] / 255.) * (bathymetryMaxOrg - bathymetryMinOrg) + bathymetryMinOrg).toFixed(0) + " m");
 }
 
 
