@@ -32,8 +32,8 @@ map.on("load", () => {
         .on("moveend", draw)
 
     // --- Initial load
-    draw({ init: false });
     bathymetryInit();
+    draw({ init: false });
 
     map.on('mousemove', showLatLon);
     $("#btnMouseInfo").click();

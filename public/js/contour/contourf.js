@@ -47,7 +47,6 @@ function contourfInit() {
         adjustColorbar(varMin,varMax,varPalette);
 
         for (var i = 0; i < data.length; i += 4) {
-            // var rgb = colorPalette((varMaxOrg - varMinOrg) / (varMax - varMin) * data[i] / 255.-);
             var rgb = varPalette((data[i] / 255. - (varMin - varMinOrg) / (varMaxOrg - varMinOrg)) * (varMaxOrg - varMinOrg) / (varMax - varMin));
             data[i] = rgb[0]; // red
             data[i + 1] = rgb[1]; // green

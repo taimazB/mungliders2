@@ -30,12 +30,14 @@ var bathymetryOpacityValue = 50;
 ///////////////////////////////////////////------------------\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
 //----------------------------------------- CANVAS & CONTEXT -----------------------------------------\\
 const cnvBathymetry = document.getElementById("cnvBathymetry");
+var cnvBathymetryTmp = document.createElement("canvas");
 const cnvGL = document.getElementById('cnvAnim');
 const cnvArrows = d3.select('#cnvArrows').node();
 const cnvContourf = d3.select('#cnvContourf').node();
 var cnvTmp = document.createElement("canvas");
 
 const ctxBathymetry = cnvBathymetry.getContext("2d");
+var ctxBathymetryTmp = cnvBathymetryTmp.getContext("2d");
 const ctxGL = cnvGL.getContext('webgl', { antialiasing: false });
 const ctxArrow = cnvArrows.getContext('2d');
 const ctxContourf = cnvContourf.getContext('2d');

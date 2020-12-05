@@ -58,8 +58,9 @@ div {
 
 .tooltip.in {
     opacity: 1;
-  }
+}
 
-  .slider.slider-vertical {
-      height: 5vh;
-  }
+.slider.slider-vertical {
+    height: 5vh;
+    padding-left: 0;
+}

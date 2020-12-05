@@ -233,23 +233,24 @@ function init_btnModels(variable) {
 
         init_times();
     }
+
+
+    function init_times() {
+        // --- Disable all hours, to be re-enabled next for the ones that exist
+        $("#btnsTime").find("button").addClass('disabled');
+
+        var hrClick = null;
+        var availTimes = field.dateTimes.filter(d => d.format("YMMDD") == lastModelDateTime.format("YMMDD"));
+        availTimes.map(d => {
+            lastModelDateTime.format("HH") == d.format("HH") ? hrClick = d.format("HH") : null;
+            $(`#hr${d.format("HH")}`).removeClass('disabled')
+        });
+
+        if (hrClick) { $(`#hr${hrClick}`).click() }
+        else { $(`#hr${availTimes[0].format("HH")}`).click() }
+    }
 }
 
-
-function init_times() {
-    // --- Disable all hours, to be re-enabled next for the ones that exist
-    $("#btnsTime").find("button").addClass('disabled');
-
-    var hrClick = null;
-    var availTimes = field.dateTimes.filter(d => d.format("YMMDD") == lastModelDateTime.format("YMMDD"));
-    availTimes.map(d => {
-        lastModelDateTime.format("HH") == d.format("HH") ? hrClick = d.format("HH") : null;
-        $(`#hr${d.format("HH")}`).removeClass('disabled')
-    });
-
-    if (hrClick) { $(`#hr${hrClick}`).click() }
-    else { $(`#hr${availTimes[0].format("HH")}`).click() }
-}
 
 $('.btnTime').on("click", (e) => {
     lastModelDateTime = moment(lastModelDateTime).set("hour", $(e.currentTarget).attr("id").slice(2));
@@ -316,13 +317,8 @@ mapWidth = parseInt($("#map").css("width"));
 mapHeight = parseInt($("#map").css("height"));
 
 $('.canvas').attr("width", mapWidth).attr("height", mapHeight);
+$("#cnvBathymetry").attr("width", mapWidth).attr("height", mapHeight);
 $("#cnvBG").attr("width", mapWidth).attr("height", mapHeight);
-
-
-///////////////////////////////////////////----------------\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
-//----------------------------------------- CONTOUR COLORS -----------------------------------------\\
-var palette = [[255, 255, 255], [255, 255, 255], [0, 102, 204], [0, 204, 255], [0, 255, 255], [0, 255, 0], [255, 255, 0], [255, 0, 0], [255, 204, 204]];
-var paletteStops = [0, 0.5404, 0.5405, 5.4054, 5.6757, 32.4324, 59.4595, 86.4865, 100];
 
 
 ///////////////////////////////////////////-----------\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
@@ -456,7 +452,7 @@ $("button").popup();
 
 function showInfo(e) {
     var rgba = ctxTmp.getImageData(e.point.x, e.point.y, 1, 1).data;
-    var rgbaBathymetry = ctxBathymetry.getImageData(e.point.x, e.point.y, 1, 1).data;
+    var rgbaBathymetry = ctxBathymetryTmp.getImageData(e.point.x, e.point.y, 1, 1).data;
 
     var x = e.originalEvent.clientX + 10;
     if (e.point.x + infoWindowWidth + 10 > mapWidth) { x -= infoWindowWidth + 10; }
@@ -502,7 +498,7 @@ function showInfo(e) {
             null;
     }
 
-    $("#infoBathymetry").html(-((rgbaBathymetry[0] / 255.) * (bathymetryMaxOrg - bathymetryMinOrg) + bathymetryMinOrg).toFixed(0) + " m");
+    $("#infoBathymetry").html(-rgbaBathymetry[0] * 50 + " m");
 }
 
 
