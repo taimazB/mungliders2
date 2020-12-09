@@ -39,7 +39,7 @@ $(".tabButtons").on("click", (e) => {
 $('.ui .accordion')
     .accordion({
         selector: {
-            trigger: '.title .icon'
+            trigger: '.title .dropdown.icon'
         }
     })
     ;
@@ -602,3 +602,21 @@ $("#btnResetMinMax").on("click", () => {
 
     draw({ init: true });
 })
+
+
+///////////////////////////////////////////-------------\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+//----------------------------------------- COLOR PICKER -----------------------------------------\\
+function initateColorPicker() {
+    colorPicker = new iro.ColorPicker("#colorPicker", {
+        layout: [{
+            component: iro.ui.Wheel,
+            options: {
+                wheelLightness: true,
+                wheelAngle: 0,
+                wheelDirection: "anticlockwise",
+                width: 100
+            }
+        }]
+    });
+}
+initateColorPicker();

@@ -42,3 +42,5 @@ const ctxGL = cnvGL.getContext('webgl', { antialiasing: false });
 const ctxArrow = cnvArrows.getContext('2d');
 const ctxContourf = cnvContourf.getContext('2d');
 var ctxTmp = cnvTmp.getContext("2d");
+
+var colorPicker;

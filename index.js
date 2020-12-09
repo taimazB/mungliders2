@@ -163,44 +163,44 @@ app.post("/getAvailDateTimes", function (req, res) {
 // });
 
 
-app.post("/readJPLMUR41SST", function (req, res) {
-  var date = req.body.date,
-    lonMin = Math.floor(+req.body.lonMin),
-    lonMax = Math.ceil(+req.body.lonMax),
-    latMin = Math.floor(+req.body.latMin),
-    latMax = Math.ceil(+req.body.latMax),
-    zoom = +req.body.zoom;
+// app.post("/readJPLMUR41SST", function (req, res) {
+//   var date = req.body.date,
+//     lonMin = Math.floor(+req.body.lonMin),
+//     lonMax = Math.ceil(+req.body.lonMax),
+//     latMin = Math.floor(+req.body.latMin),
+//     latMax = Math.ceil(+req.body.latMax),
+//     zoom = +req.body.zoom;
 
-  promises = [];
-  // level = "11.0";
+//   promises = [];
+//   // level = "11.0";
 
-  // --- Zoom levels: [4 ,  5,  6,  7,  8,  9]
-  // --- reses:       [1 ,  1,  1, .5, .5, .1]
-  var reses = [1, 1, 1, .5, .5, .1];
-  for (level = -1; level <= 22.7; level += reses[zoom - 4]) {
-    files = glob.sync(`public/models/jplMUR41/SST/cnt${level.toFixed(1)}_i*.csv`);
-    for (var i = 0; i < files.length; i++) { // --- Needs to be synchronous, so NO forEach
-      var filePromise = new Promise(resolve => {
-        var tmp = [{ level: level }];
-        fs.createReadStream(files[i])
-          .pipe(csv())
-          .on('data', (data) => { tmp.push(data) })
-          .on('end', () => { resolve(tmp) })
-      })
-      promises.push(filePromise);
-    };
-  }
+//   // --- Zoom levels: [4 ,  5,  6,  7,  8,  9]
+//   // --- reses:       [1 ,  1,  1, .5, .5, .1]
+//   var reses = [1, 1, 1, .5, .5, .1];
+//   for (level = -1; level <= 22.7; level += reses[zoom - 4]) {
+//     files = glob.sync(`public/models/jplMUR41/SST/cnt${level.toFixed(1)}_i*.csv`);
+//     for (var i = 0; i < files.length; i++) { // --- Needs to be synchronous, so NO forEach
+//       var filePromise = new Promise(resolve => {
+//         var tmp = [{ level: level }];
+//         fs.createReadStream(files[i])
+//           .pipe(csv())
+//           .on('data', (data) => { tmp.push(data) })
+//           .on('end', () => { resolve(tmp) })
+//       })
+//       promises.push(filePromise);
+//     };
+//   }
 
-  var levels = [];
-  Promise.all(promises).then(results => {
-    // results.forEach(result=>{
-    //   levels.push(result[0]['level']);
-    // });
-    // levels = [...new Set(levels)];  // --- Filter unique values only
-    // console.log(levels);
-    res.send({ results });
-  })
-});
+//   var levels = [];
+//   Promise.all(promises).then(results => {
+//     // results.forEach(result=>{
+//     //   levels.push(result[0]['level']);
+//     // });
+//     // levels = [...new Set(levels)];  // --- Filter unique values only
+//     // console.log(levels);
+//     res.send({ results });
+//   })
+// });
 
 
 app.post("/readCSV", function (req, res) {

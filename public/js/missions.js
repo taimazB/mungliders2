@@ -1,17 +1,28 @@
 function addMission(mission) {
-    switch (mission) {
-        case "PDlab2019":
-            var data = readGliderData(mission);
-            var gjLine = coords2GJline(data);
-            var gjPoint = coords2GJpoint(data);
-            mapAddLayer(mission, gjLine, gjPoint, '#0000ff');
-    }
+    var data = readGliderData(mission);
+    var gjLines = coords2GJline(data);
+    var gjPoints = coords2GJpoint(data);
+    mapAddLayer(mission, gjLines, gjPoints, '#ffffff');
+    map.fitBounds([[d3.min(data.map(d => parseFloat(d.lon))), d3.min(data.map(d => parseFloat(d.lat)))], [d3.max(data.map(d => parseFloat(d.lon))), d3.max(data.map(d => parseFloat(d.lat)))]],
+        { padding: 20 })
+    $(`#control${mission}`).css("display", "inline-flex");
+}
+
+
+function removeMission(mission) {
+    map.removeLayer(`${mission}_line`);
+    map.removeLayer(`${mission}_points`);
+
+    map.removeSource(`${mission}_line`);
+    map.removeSource(`${mission}_points`);
+
+    $(`#control${mission}`).css("display", "none");
 }
 
 
 function readGliderData(mission) {
     var content = {
-        path: `public/missions/${mission}.csv`
+        path: `public/missions/${mission}/${mission}.csv`
     };
 
     var csvData;
@@ -201,3 +212,35 @@ function mapAddLayer(name, gjLine, gjPoint, color) {
         }
     })
 }
+
+
+var outClick = true;
+function updateColor(mission) {
+    var xy = $(`#control${mission}`).offset();
+    $("#colorPicker")
+        .show()
+        .css("top", xy.top - 50)
+        .css("left", xy.left + 50)
+
+    // --- Remove last handler
+    colorPicker.off('color:change');
+
+    colorPicker.on('color:change', (color, changes) => {
+        var color = colorPicker.color.rgbString;
+        $(`#color${mission}`).css("background", color);
+        map.setPaintProperty(`${mission}_line`, 'line-color', color);
+        map.setPaintProperty(`${mission}_points`, 'circle-color', color);
+    })
+    outClick = false;
+}
+
+// --- Hide color picker is clicked outside
+$(document).click(function (event) {
+    if (outClick) {
+        var $target = $(event.target);
+        if (!$target.closest('#colorPicker').length && $("#colorPicker").is(":visible")) {
+            $('#colorPicker').hide();
+        }
+    }
+    outClick = true;
+});

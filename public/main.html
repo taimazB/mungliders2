@@ -84,6 +84,10 @@
         integrity="sha512-C8lBe+d5Peg8kU+0fyU+JfoDIf0kP1rQBuPwRSBNHqqvqaPu+rkjlY0zPPAqdJOLSFlVI+Wku32S7La7eFhvlA=="
         crossorigin="anonymous"></script>
 
+    <!-- Color Picker -->
+    <script src="https://cdn.jsdelivr.net/npm/@jaames/iro"></script>
+
+
     <!-- Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Ubuntu:wght@700&display=swap" rel="stylesheet">
 
@@ -120,7 +124,7 @@
                 </div>
 
                 <!-- TAB CONTENTS -->
-                <div class="fifteen wide column p-0">
+                <div class="fourteen wide column p-0" style="position: absolute; right: 0;">
                     <div class="p-3" style="height: 90vh; overflow:auto;">
                         <!-- MODELS TAB -->
                         <div id="tabModels" class="ui segment inverted tabContent" style="display: block;">
@@ -283,6 +287,14 @@
                                 <div class="title">
                                     <i class="dropdown icon"></i>
                                     <span onclick="addMission('SBwave2020')">Sailbuoy Wave</span>
+                                    <div id="controlSBwave2020" style="float: right; display: none;">
+                                        <div id="colorSBwave2020" class="mx-1"
+                                            style="background: #fff; border-radius: 5px; width: 20px; height: 20px;"
+                                            onclick="updateColor('SBwave2020')"></div>
+                                        <i class="x icon mx-1"
+                                            style="float:right; display: block;"
+                                            onclick="removeMission('SBwave2020')"></i>
+                                    </div>
                                 </div>
                                 <div class="content">
                                     <table class="ui inverted table">
@@ -314,6 +326,13 @@
                                 <div class="title">
                                     <i class="dropdown icon"></i>
                                     <span onclick="addMission('PDlab2019')">Pearldiver Labrador</span>
+                                    <div id="controlPDlab2019" style="float: right; display: none;">
+                                        <div id="colorPDlab2019" class="mx-1"
+                                            style="background: #fff; border-radius: 5px; width: 20px; height: 20px;"
+                                            onclick="updateColor('PDlab2019')"></div>
+                                        <i class="x icon mx-1" style="float:right; display: block;"
+                                            onclick="removeMission('PDlab2019')"></i>
+                                    </div>
                                 </div>
                                 <div class="content">
                                     <table class="ui inverted table">
@@ -352,6 +371,14 @@
                                 <div class="title">
                                     <i class="dropdown icon"></i>
                                     <span onclick="addMission('SBbeluga2019')">Sailbuoy Beluga</span>
+                                    <div id="controlSBbeluga2019" style="float: right; display: none;">
+                                        <div id="colorSBbeluga2019" class="mx-1"
+                                            style="background: #fff; border-radius: 5px; width: 20px; height: 20px;"
+                                            onclick="updateColor('SBbeluga2019')"></div>
+                                        <i class="x icon mx-1"
+                                            style="float:right; display: block;"
+                                            onclick="removeMission('SBbeluga2019')"></i>
+                                    </div>
                                 </div>
                                 <div class="content">
                                     <table class="ui inverted table">
@@ -382,6 +409,14 @@
                                 <div class="title">
                                     <i class="dropdown icon"></i>
                                     <span onclick="addMission('PDgosl2019')">Pearldiver Gulf of St. Lawrence</span>
+                                    <div id="controlPDgosl2019" style="float: right; display: none;">
+                                        <div id="colorPDgosl2019" class="mx-1"
+                                            style="background: #fff; border-radius: 5px; width: 20px; height: 20px;"
+                                            onclick="updateColor('PDgosl2019')"></div>
+                                        <i class="x icon mx-1"
+                                            style="float:right; display: block;"
+                                            onclick="removeMission('PDgosl2019')"></i>
+                                    </div>
                                 </div>
                                 <div class="content">
                                     <table class="ui inverted table">
@@ -413,6 +448,14 @@
                                 <div class="title">
                                     <i class="dropdown icon"></i>
                                     <span onclick="addMission('vitals2016')">VITALS</span>
+                                    <div id="controlvitals2016" style="float: right; display: none;">
+                                        <div id="colorvitals2016" class="mx-1"
+                                            style="background: #fff; border-radius: 5px; width: 20px; height: 20px;"
+                                            onclick="updateColor('vitals2016')"></div>
+                                        <i class="x icon mx-1"
+                                            style="float:right; display: block;"
+                                            onclick="removeMission('vitals2016')"></i>
+                                    </div>
                                 </div>
                                 <div class="content">
                                     <table class="ui inverted table">
@@ -444,6 +487,14 @@
                                 <div class="title">
                                     <i class="dropdown icon"></i>
                                     <span onclick="addMission('unit473_2014')">Unit_473</span>
+                                    <div id="controlunit473_2014" style="float: right; display: none;">
+                                        <div id="colorunit473_2014" class="mx-1"
+                                            style="background: #fff; border-radius: 5px; width: 20px; height: 20px;"
+                                            onclick="updateColor('unit473_2014')"></div>
+                                        <i class="x icon mx-1"
+                                            style="float:right; display: block;"
+                                            onclick="removeMission('unit473_2014')"></i>
+                                    </div>
                                 </div>
                                 <div class="content">
                                     <table class="ui inverted table">
@@ -474,6 +525,13 @@
                                 <div class="title">
                                     <i class="dropdown icon"></i>
                                     <span onclick="addMission('PD2014')">Pearldiver</span>
+                                    <div id="controlPD2014" style="float: right; display: none;">
+                                        <div id="colorPD2014" class="mx-1"
+                                            style="background: #fff; border-radius: 5px; width: 20px; height: 20px;"
+                                            onclick="updateColor('PD2014')"></div>
+                                        <i class="x icon mx-1" style="float:right; display: block;"
+                                            onclick="removeMission('PD2014')"></i>
+                                    </div>
                                 </div>
                                 <div class="content">
                                     <table class="ui inverted table">
@@ -503,25 +561,33 @@
 
                         <!-- SETTINGS TAB -->
                         <div id="tabSettings" class="ui segment inverted tabContent" style="display: none; padding: 0;">
-                            <div class="ui grid my-0" style="padding: 0;width: 100%;height: 5vh;justify-content: center;">
+                            <div class="ui grid my-0"
+                                style="padding: 0;width: 100%;height: 5vh;justify-content: center;">
                                 <div class="one wide column m-0">
                                     <i id="bathymetryMinUp" class="fas fa-angle-up clickable" aria-hidden="true"></i>
-                                    <i id="bathymetryMinDown" class="fas fa-angle-down clickable" aria-hidden="true"></i>
+                                    <i id="bathymetryMinDown" class="fas fa-angle-down clickable"
+                                        aria-hidden="true"></i>
                                 </div>
                                 <div class="twelve wide column m-0">
                                     <div style="height: 2vh;width: 100%;position: relative;margin-bottom: 15px;">
-                                        <label id="lbBathymetryColorbar0" class="colorbarLabel" style="left: 0%;"></label>
-                                        <label id="lbBathymetryColorbar25" class="colorbarLabel" style="left: 25%;"></label>
-                                        <label id="lbBathymetryColorbar50" class="colorbarLabel" style="left: 50%;"></label>
-                                        <label id="lbBathymetryColorbar75" class="colorbarLabel" style="left: 75%;"></label>
-                                        <label id="lbBathymetryColorbar100" class="colorbarLabel" style="left: 100%;"></label>
+                                        <label id="lbBathymetryColorbar0" class="colorbarLabel"
+                                            style="left: 0%;"></label>
+                                        <label id="lbBathymetryColorbar25" class="colorbarLabel"
+                                            style="left: 25%;"></label>
+                                        <label id="lbBathymetryColorbar50" class="colorbarLabel"
+                                            style="left: 50%;"></label>
+                                        <label id="lbBathymetryColorbar75" class="colorbarLabel"
+                                            style="left: 75%;"></label>
+                                        <label id="lbBathymetryColorbar100" class="colorbarLabel"
+                                            style="left: 100%;"></label>
                                     </div>
                                     <div id="bathymetryColorbar" style="height: 1vh;width: 100%;">
                                     </div>
                                 </div>
                                 <div class="one wide column">
                                     <i id="bathymetryMaxUp" class="fas fa-angle-up clickable" aria-hidden="true"></i>
-                                    <i id="bathymetryMaxDown" class="fas fa-angle-down clickable" aria-hidden="true"></i>
+                                    <i id="bathymetryMaxDown" class="fas fa-angle-down clickable"
+                                        aria-hidden="true"></i>
                                 </div>
                                 <div class="one wide column">
                                     <button id="btnResetMinMaxBathymetry" class="ui inverted icon button"
@@ -610,6 +676,10 @@
         </div>
     </div>
 
+
+    <!-- ############################################################## -->
+    <!-- COLOR PICKER -->
+    <div class="wheel" id="colorPicker" style="top: 0; left: 0; position: absolute; display: none;"></div>
 
 
     <!-- ########################################################### -->
