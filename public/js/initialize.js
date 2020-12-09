@@ -225,7 +225,7 @@ function init_btnModels(variable) {
             .on('changeDate', (e) => {
                 lastModelDateTime = moment(lastModelDateTime).set("month", e.date.getMonth());
                 lastModelDateTime = moment(lastModelDateTime).set("date", e.date.getDate());
-                field.dateTime = lastModelDateTime;
+                // field.dateTime = lastModelDateTime;
 
                 init_times();
             })
@@ -298,7 +298,9 @@ function playTime() {
                     var thisYear = lastModelDateTime.toDate().getUTCFullYear(),
                         thisMonth = lastModelDateTime.toDate().getUTCMonth(),
                         thisDay = lastModelDateTime.toDate().getUTCDate();
-                    $('.datepicker').datepicker('update', new Date(thisYear, thisMonth, thisDay));
+                    $('.datepicker')
+                    .datepicker('setDate', new Date(thisYear, thisMonth, thisDay))
+                    .datepicker('update', new Date(thisYear, thisMonth, thisDay));
                 }
                 if (!$(`#hr${lastModelDateTime.format("HH")}`).hasClass('disabled')) {
                     $(`#hr${lastModelDateTime.format("HH")}`).click()
