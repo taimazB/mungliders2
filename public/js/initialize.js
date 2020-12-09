@@ -280,6 +280,45 @@ function init_ddDepths() {
 init_btnFields();
 
 
+var idPlayTime;
+function playTime() {
+    var i = field.dateTimes.findIndex(d => d.format("YMMDD_HH") == lastModelDateTime.format("YMMDD_HH"));
+
+    if ($("#btnPlayTime i").hasClass("play")) {
+        $("#btnPlayTime i").removeClass("play");
+        $("#btnPlayTime i").addClass("pause");
+        $("#btnPlayTime").attr("data-content", "Stop");
+
+        idPlayTime = setInterval(() => {
+            i++;
+            if (i < field.dateTimes.length) {
+                var tmpLastModelDateTime = lastModelDateTime;
+                lastModelDateTime = field.dateTimes[i];
+                if (lastModelDateTime.toDate().getUTCDate() != tmpLastModelDateTime.toDate().getUTCDate()) {
+                    var thisYear = lastModelDateTime.toDate().getUTCFullYear(),
+                        thisMonth = lastModelDateTime.toDate().getUTCMonth(),
+                        thisDay = lastModelDateTime.toDate().getUTCDate();
+                    $('.datepicker').datepicker('update', new Date(thisYear, thisMonth, thisDay));
+                }
+                if (!$(`#hr${lastModelDateTime.format("HH")}`).hasClass('disabled')) {
+                    $(`#hr${lastModelDateTime.format("HH")}`).click()
+                }
+            } else {
+                $("#btnPlayTime i").removeClass("pause");
+                $("#btnPlayTime i").addClass("play");
+                $("#btnPlayTime").attr("data-content", "Play");
+                clearInterval(idPlayTime);
+            }
+        }, 1000)
+
+    } else {
+        $("#btnPlayTime i").removeClass("pause");
+        $("#btnPlayTime i").addClass("play");
+        $("#btnPlayTime").attr("data-content", "Play");
+        clearInterval(idPlayTime);
+    }
+}
+
 ///////////////////////////////////////////---------------------\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
 //----------------------------------------- DATE & TIME UP/DOWN -----------------------------------------\\
 $("#dayDown").on("click", () => {
@@ -483,12 +522,30 @@ function showInfo(e) {
             break;
 
         case "SST":
-        case "SWH":
-        case "Seaice":
             var point = rgba[0] / 255. * (varMaxOrg - varMinOrg) + varMinOrg;
             if (point >= -1.8) {
                 $("#infoWindow").css("display", "block");
                 $("#infoContourf").html(point.toFixed(1) + " &deg;C");
+            } else {
+                $("#infoWindow").css("display", "none");
+            }
+            break;
+
+        case "SWH":
+            var point = rgba[0] / 255. * (varMaxOrg - varMinOrg) + varMinOrg;
+            if (point >= -1.8) {
+                $("#infoWindow").css("display", "block");
+                $("#infoContourf").html(point.toFixed(1) + " m");
+            } else {
+                $("#infoWindow").css("display", "none");
+            }
+            break;
+
+        case "Seaice":
+            var point = rgba[0] / 255. * (varMaxOrg - varMinOrg) + varMinOrg;
+            if (point >= -1.8) {
+                $("#infoWindow").css("display", "block");
+                $("#infoContourf").html(point.toFixed(1) + " %");
             } else {
                 $("#infoWindow").css("display", "none");
             }

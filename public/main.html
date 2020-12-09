@@ -142,14 +142,14 @@
 
                             <div class="ui grid">
                                 <!-- DATE -->
-                                <div class="eight wide column" style="text-align: center;">
+                                <div class="seven wide column" style="text-align: center;">
                                     <i id="dayUp" class="fas fa-angle-up clickable"></i>
                                     <input class="datepicker form-control" style="text-align: center;">
                                     <i id="dayDown" class="fas fa-angle-down clickable"></i>
                                 </div>
 
                                 <!-- TIME -->
-                                <div id="btnsTime" class="eight wide column ui buttons tiny py-0"
+                                <div id="btnsTime" class="seven wide column ui buttons tiny py-0"
                                     style="display:inherit; text-align: center;">
                                     <div class="ui grid" style="margin: 0;">
                                         <button id="hr00" class="four wide column ui button p-0 btnTime">00</button>
@@ -177,6 +177,13 @@
                                         <button id="hr22" class="four wide column ui button p-0 btnTime">22</button>
                                         <button id="hr23" class="four wide column ui button p-0 btnTime">23</button>
                                     </div>
+                                </div>
+
+                                <!-- PLAY -->
+                                <div class="two wide column ui p-0">
+                                    <button id="btnPlayTime" class="ui icon mini circular button m-0" data-content="Play time" onclick="playTime()">
+                                        <i class="play icon"></i>
+                                    </button>
                                 </div>
                             </div>
 
@@ -291,8 +298,7 @@
                                         <div id="colorSBwave2020" class="mx-1"
                                             style="background: #fff; border-radius: 5px; width: 20px; height: 20px;"
                                             onclick="updateColor('SBwave2020')"></div>
-                                        <i class="x icon mx-1"
-                                            style="float:right; display: block;"
+                                        <i class="x icon mx-1" style="float:right; display: block;"
                                             onclick="removeMission('SBwave2020')"></i>
                                     </div>
                                 </div>
@@ -375,8 +381,7 @@
                                         <div id="colorSBbeluga2019" class="mx-1"
                                             style="background: #fff; border-radius: 5px; width: 20px; height: 20px;"
                                             onclick="updateColor('SBbeluga2019')"></div>
-                                        <i class="x icon mx-1"
-                                            style="float:right; display: block;"
+                                        <i class="x icon mx-1" style="float:right; display: block;"
                                             onclick="removeMission('SBbeluga2019')"></i>
                                     </div>
                                 </div>
@@ -413,8 +418,7 @@
                                         <div id="colorPDgosl2019" class="mx-1"
                                             style="background: #fff; border-radius: 5px; width: 20px; height: 20px;"
                                             onclick="updateColor('PDgosl2019')"></div>
-                                        <i class="x icon mx-1"
-                                            style="float:right; display: block;"
+                                        <i class="x icon mx-1" style="float:right; display: block;"
                                             onclick="removeMission('PDgosl2019')"></i>
                                     </div>
                                 </div>
@@ -452,8 +456,7 @@
                                         <div id="colorvitals2016" class="mx-1"
                                             style="background: #fff; border-radius: 5px; width: 20px; height: 20px;"
                                             onclick="updateColor('vitals2016')"></div>
-                                        <i class="x icon mx-1"
-                                            style="float:right; display: block;"
+                                        <i class="x icon mx-1" style="float:right; display: block;"
                                             onclick="removeMission('vitals2016')"></i>
                                     </div>
                                 </div>
@@ -491,8 +494,7 @@
                                         <div id="colorunit473_2014" class="mx-1"
                                             style="background: #fff; border-radius: 5px; width: 20px; height: 20px;"
                                             onclick="updateColor('unit473_2014')"></div>
-                                        <i class="x icon mx-1"
-                                            style="float:right; display: block;"
+                                        <i class="x icon mx-1" style="float:right; display: block;"
                                             onclick="removeMission('unit473_2014')"></i>
                                     </div>
                                 </div>

@@ -85,15 +85,16 @@ function staticArrows(ctxArrowData) {
     for (var i = 0; i <= mapWidth; i = i + spacing) {
         for (var j = 0; j <= mapHeight; j = j + spacing) {
             [u, v] = ctxArrowData.getImageData(i, j, 1, 1).data;
-            u = (u / 255) * (varMax - varMin) + varMin;
-            v = -((v / 255) * (varMax - varMin) + varMin);
+            var u = (u / 255) * (varMax - varMin) + varMin,
+                v = -((v / 255) * (varMax - varMin) + varMin),
+                speed = Math.sqrt(u ** 2 + v ** 2);
 
             data.push({
                 x: i,
                 y: j,
                 u: u,
                 v: v,
-                speed: Math.sqrt(u ** 2 + v ** 2),
+                speed: speed,
                 direction: Math.atan2(v, u)
             })
         }
