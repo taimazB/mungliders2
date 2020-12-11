@@ -68,4 +68,4 @@ var hand1 = createHand(axis1);
 //   hand1.showValue(Math.random() * hand1.axis.max, 300, am4core.ease.cubicOut);
 // }, 2000);
 
-$("svg[version='1.1']").children("g").children("g").children("g")[1].remove()
+$("svg[version='1.1']").children("g").children("g").children("g")[1].remove();

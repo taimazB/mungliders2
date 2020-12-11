@@ -136,4 +136,4 @@ $("#bathymetryMaxDown").on("click", () => {
 $("#btnResetMinMaxBathymetry").on("click", () => {
     resetBathymetryMinMax();
     draw({ init: false })
-})
+});

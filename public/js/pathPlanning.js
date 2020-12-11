@@ -18,7 +18,8 @@ function initiatePathPlanning() {
     try {
         markerFrom.remove();
         markerTo.remove();
-    } catch { null }
+    }
+    catch(err) { null }
 
     addMarkerFrom(PPfrom);
     addMarkerTo(PPto);
@@ -195,7 +196,7 @@ function addPP2Map(data) {
         map.removeSource('PPline');
         map.removeSource('PPcircles');
         map.removeSource('PPdistances');
-    } catch { null; }
+    } catch(err) { null; }
 
     var rows = [];
     data.forEach(function (row) {
