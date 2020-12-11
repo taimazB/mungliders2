@@ -27,14 +27,15 @@ http.listen(2020, '0.0.0.0', function () {
 });
 
 var pass = false;
-console.log("body: ", pass)
 app.get("/", function (req, res) {
+    pass = false;
   res.sendFile(__dirname + "/public/login.html");
 });
 
 
 app.post("/login", function (req, res) {
-  const password = "y1jD3r";
+    const password = "y1jD3r";
+    pass = false;
   if (req.body.password == password) {
     pass = true;
     res.send(password);
@@ -43,7 +44,6 @@ app.post("/login", function (req, res) {
 });
 
 app.get("/map", function (req, res) {
-  console.log("MAP: ", pass)
   if (pass) {
     res.sendFile(__dirname + "/public/main.html");
   }
