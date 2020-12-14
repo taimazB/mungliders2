@@ -17,15 +17,18 @@ function login() {
 
 $(".buttonLogin").on("click", login);
 
-$.ajax({
-    url: "/login",
-    type: "POST",
-    async: false,
-    data: {password: "y1jD3r"},
-    success: function (data, textStatus, jqXHR) {
-        window.location.replace('/map'); 
-    },
-    error: function (jqXHR, textStatus, errorThrown) {
-        console.log(errorThrown);
-    }
-});
+
+
+
+// $.ajax({
+//     url: "/login",
+//     type: "POST",
+//     async: false,
+//     data: {password: "y1jD3r"},
+//     success: function (data, textStatus, jqXHR) {
+//         window.location.replace('/map'); 
+//     },
+//     error: function (jqXHR, textStatus, errorThrown) {
+//         console.log(errorThrown);
+//     }
+// });

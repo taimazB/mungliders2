@@ -8,7 +8,7 @@ cd ${HERE}/public/js/
 for f in globals.js tools.js initialize.js current/wind-gl.js current/current.js contour/contourf.js bathymetry.js main.js gauge.js pathPlanning.js missions.js; do
     cat $f >> tmp
 done
-uglifyjs tmp -c -m -e > ../scripts.js
+uglifyjs tmp -m reserved=["mapDistanceLinearClick","mapDistanceLinearMove"] -e > ../scripts.js
 rm tmp
 
 

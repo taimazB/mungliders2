@@ -261,7 +261,7 @@ function mapDistanceLinearOff() {
     map.removeLayer('distanceLinearCircles');
     map.removeLayer('distanceLinearLine');
     map.removeSource('distanceLinear');
-    map.getCanvas().style.cursor = 'grab';
+    map.getCanvas().style.cursor = '';
 
     // --- Remove all popups
     $('.mapboxgl-popup').remove();
