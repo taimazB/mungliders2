@@ -1,3 +1,5 @@
+###########################################--------###########################################
+##----------------------------------------- ENCODE -----------------------------------------##
 HERE=${HOME}/Projects/mungliders/web/
 
 
@@ -16,3 +18,15 @@ rm tmp
 cd ${HERE}/public/
 mv mainMapPage.html mainMapPage.html.b
 sed '/\.\/js\//d' mainMapPage.html.b  | sed '/<!-- SCRIPTS -->/a <script src="./scripts.js"></script>' > mainMapPage.html
+
+
+###########################################--------###########################################
+##----------------------------------------- UPLOAD -----------------------------------------##
+cd ${HERE}
+DO=taimaz@159.203.6.104
+
+rsync -aruvz --exclude-from='.exclude' --delete . ${DO}:web
+
+cd ${HERE}/public
+mv mainMapPage.html.b mainMapPage.html
+rm ${HERE}/public/scripts.js

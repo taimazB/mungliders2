@@ -299,8 +299,8 @@ function playTime() {
                         thisMonth = lastModelDateTime.toDate().getUTCMonth(),
                         thisDay = lastModelDateTime.toDate().getUTCDate();
                     $('.datepicker')
-                    .datepicker('setDate', new Date(thisYear, thisMonth, thisDay))
-                    .datepicker('update', new Date(thisYear, thisMonth, thisDay));
+                        .datepicker('setDate', new Date(thisYear, thisMonth, thisDay))
+                        .datepicker('update', new Date(thisYear, thisMonth, thisDay));
                 }
                 if (!$(`#hr${lastModelDateTime.format("HH")}`).hasClass('disabled')) {
                     $(`#hr${lastModelDateTime.format("HH")}`).click()
@@ -421,6 +421,19 @@ function addRemoveMouseInfo() {
 }
 
 
+function toggleDistance() {
+    isDistance = !isDistance;
+    if (isDistance) {
+        $("#btnDistance").addClass("active");
+        new mapDistanceLinearOn();
+    } else {
+        $("#btnDistance").removeClass("active");
+        new mapDistanceLinearOff();
+
+    }
+}
+
+
 function unhideCanvas() {
     switch (field.field) {
         case "Currents":
@@ -485,6 +498,15 @@ function addSettings(e) {
             null;
     }
 
+    // --- Tools
+    $("#settingsModel").append(`
+        <div class="ui divider"></div>
+        <button id="btnDistance" class="ui icon mini circular toggle button m-2 ${isDistance ? "active" : null}" data-content="Distance">
+            <i class="fas fa-ruler"></i>
+        </button>
+    `);
+    $("#btnDistance").on("click", toggleDistance);
+
     $("button").popup();
 }
 
@@ -547,7 +569,7 @@ function showInfo(e) {
             var point = rgba[0] / 255. * (varMaxOrg - varMinOrg) + varMinOrg;
             if (point >= -1.8) {
                 $("#infoWindow").css("display", "block");
-                $("#infoContourf").html(point.toFixed(1) + " %");
+                $("#infoContourf").html((100*point).toFixed(1) + " %");
             } else {
                 $("#infoWindow").css("display", "none");
             }

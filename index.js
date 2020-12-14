@@ -45,7 +45,7 @@ app.post("/login", function (req, res) {
 
 app.get("/map", function (req, res) {
   if (pass) {
-    res.sendFile(__dirname + "/public/main.html");
+    res.sendFile(__dirname + "/public/mainMapPage.html");
   }
 });
 

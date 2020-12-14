@@ -13,6 +13,7 @@ var bnds;
 
 // --- Currents
 var isAnimation = true, isMouseInfo = false;
+var isDistance = false;
 
 // --- Min & Max
 var varMin, varMax, varMinOrg, varMaxOrg, varPalette;
